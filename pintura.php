@@ -81,10 +81,6 @@ $total_paginas = ceil($total_resultados / $resultados_por_pagina);
             ?>
             <a href="detalles.php?id=<?php echo $row['id']; ?>&token=<?php echo hash_hmac('sha256', $row['id'], KEY_TOKEN); ?>"> <img src="<?php echo $imagen; ?>"></a>
                   
-                    <div class="button-group" >
-                        <span><i class="fa-regular fa-heart" href=""></i></span>
-                        
-                    </div>
                 </div>
                 <div class="content-card-product">
                     <p class="price">RD$<?php echo number_format($row['precio'], 2, '.',','); ?></p> 
