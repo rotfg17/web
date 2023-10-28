@@ -33,6 +33,7 @@ if ($id == '' || $token == '')  {
             $num_referencia = $row['num_referencia'];
             $precio_des = $precio - (($precio * $descuento ) / 100);
             $dir_images = 'img/productos/' . $id . '/';
+            $imagenes = [];
 
             $rutaimgJPG = $dir_images . 'principal.jpg';
             $rutaimgJPEG = $dir_images . 'principal.jpg';
