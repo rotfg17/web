@@ -26,6 +26,7 @@ $pagina = isset($_GET['pagina']) ? $_GET['pagina'] : 1; // Página actual
 // Consulta SQL
 $sql = "SELECT id, nombre, marca, descripcion, precio, descuento, stock, num_referencia, id_categoria FROM productos WHERE activo = 1";
 $resultado = $con->query($sql);
+$productos = $resultado->fetchAll(PDO::FETCH_ASSOC);
 
 // Total de resultados
 $totalResultados = $resultado->rowCount();
@@ -56,8 +57,7 @@ $productos = $resultadoPaginacion->fetchAll(PDO::FETCH_ASSOC);
         <div class="table-responsive">
             <table class="table table-hover">
                 <thead>
-                    <tr>
-                        <th scope="col">Codigo</th>
+                    <tr>                   
                         <th scope="col">Nombre</th>
                         <th scope="col">Marca</th>
                         <th scope="col">Descripcion</th>
@@ -72,8 +72,7 @@ $productos = $resultadoPaginacion->fetchAll(PDO::FETCH_ASSOC);
                 </thead>
                 <tbody>
                   <?php foreach($productos as $producto) { ?>
-                        <tr>
-                            <td><?php echo $producto['id'] ?></td>
+                        <tr>                          
                             <td><?php echo $producto['nombre'] ?></td>
                             <td><?php echo $producto['marca'] ?></td>
                             <td><?php echo $producto['descripcion'] ?></td>
@@ -85,7 +84,8 @@ $productos = $resultadoPaginacion->fetchAll(PDO::FETCH_ASSOC);
                             <td><a class="btn btn-warning btn-sm" href="edita.php?id=<?php echo 
                             $producto['id']; ?>">Editar</a></td>
                             <td>
-                            <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalElimina" data-bs-id=" <?php echo $producto['id'] ?>">
+                            <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalElimina"
+                              data-bs-id=" <?php echo $producto['id'] ?>">
                             <i class="fa-solid fa-xmark"></i>
                             </button>
                             </td>
