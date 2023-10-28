@@ -34,17 +34,27 @@ if ($id == '' || $token == '')  {
             $precio_des = $precio - (($precio * $descuento ) / 100);
             $dir_images = 'img/productos/' . $id . '/';
 
-            $rutaimg = $dir_images . 'principal.jpg';
-
-            if(!file_exists($rutaimg)) {
-                $rutaimg = 'img/no-photo.jpg';
-            }
-
-            $imagenes = array();
-            if(file_exists($dir_images)){
-
-            
+            $rutaimgJPG = $dir_images . 'principal.jpg';
+            $rutaimgJPEG = $dir_images . 'principal.jpg';
+            $rutaimgPNG = $dir_images . 'principal.png';
+            $rutaimgWebP = $dir_images . 'principal.webp';
             $dir = dir($dir_images);
+            
+            if (!file_exists($rutaimgJPG) && !file_exists($rutaimgJPEG) && !file_exists($rutaimgPNG) && !file_exists($rutaimgWebP)) {
+                $rutaimg = 'img/no-photo.jpg'; // Imagen de respaldo si ninguna de las tres versiones existe
+            } else {
+                // Aquí puedes decidir cuál de las tres versiones utilizar
+                if (file_exists($rutaimgJPG)) {
+                    $rutaimg = $rutaimgJPG; // Utilizar la versión JPG si existe
+                } elseif (file_exists($rutaimgJPEG)) {
+                    $rutaimg = $rutaimgJPEG; // Utilizar la versión PNG si existe
+                } elseif (file_exists($rutaimgPNG)) {
+                    $rutaimg = $rutaimgPNG; // Utilizar la versión PNG si existe
+                } elseif (file_exists($rutaimgWebP)) {
+                    $rutaimg = $rutaimgWebP; // Utilizar la versión WebP si existe
+                }
+            }
+            
 
             while(($archivo = $dir->read()) !=false){
                 if($archivo != 'principal.jpg' && (strpos($archivo, 'jpg') || strpos($archivo, 'jpeg')|| strpos($archivo, 'png') || strpos($archivo, 'webp'))){
@@ -63,7 +73,7 @@ if ($id == '' || $token == '')  {
         exit;
     }
 }
-}
+
 
 
 
@@ -89,17 +99,21 @@ if ($id == '' || $token == '')  {
 <?php include 'menu.php'; ?>
 
    <main>
-            <div class="product-container1 container">
-            <div class="product01">
-              <img src="<?php echo $rutaimg;?>" alt="Producto 1" class="product_image1">
-              <div class="thumbnail-container">
-                <img class="thumbnail active" src="<?php echo $rutaimg;?>" alt="">  
-                <?php foreach ($imagenes as $img) { ?> 
-                    <img src="<?php echo $img; ?>" class="thumbnail">   
-                    <?php } ?>
-               </div>
-               
-          </div>
+   <div class="product-container1 mb-6">
+    <div class="product01">
+        <img src="<?php echo $rutaimg; ?>" alt="Producto 1" class="product_image1">
+        <div class="thumbnail-container">
+            <img class="thumbnail active" src="<?php echo $rutaimg; ?>" alt="">
+            <?php
+            foreach ($imagenes as $img) {
+                if ($img !== $rutaimg) { // Excluye la imagen principal
+                    echo '<img src="' . $img . '" class="thumbnail">';
+                }
+            }
+            ?>
+        </div>
+    </div>
+
           
           <div class="container-info-product">
             <div class="titulo">
@@ -199,6 +213,9 @@ if ($id == '' || $token == '')  {
                     </div>
                 </div>
         </main>
+        <br><br><br>
+        <br><br><br>
+        <br><br>
 
         <?php include 'footer.php'; ?>
 
