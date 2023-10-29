@@ -93,6 +93,7 @@ $total_paginas = ceil($total_resultados / $resultados_por_pagina);
                      '<?php echo hash_hmac('sha256', $row['id'], KEY_TOKEN); ?>')">Añadir a favorito</button>
 
 
+
                     </div>
                 </div> 
                 
