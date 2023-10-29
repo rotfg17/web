@@ -1,6 +1,6 @@
 <?php
 
-require_once '../php/config.php';
+require '../php/config.php';
 if(isset($_POST['id'])){
 
     $id = $_POST['id'];

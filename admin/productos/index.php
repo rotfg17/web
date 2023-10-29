@@ -42,7 +42,6 @@ $sqlPaginacion = $sql . " LIMIT $indiceInicio, $porPagina";
 $resultadoPaginacion = $con->query($sqlPaginacion);
 $productos = $resultadoPaginacion->fetchAll(PDO::FETCH_ASSOC);
 
-
 ?>
 
 <?php include '../header.php';?>
@@ -73,7 +72,7 @@ $productos = $resultadoPaginacion->fetchAll(PDO::FETCH_ASSOC);
                 <tbody>
                   <?php foreach($productos as $producto) { ?>
                         <tr>                          
-                            <td><?php echo $producto['nombre'] ?></td>
+                            <td><?php echo htmlspecialchars($producto['nombre'], ENT_QUOTES); ?></td>
                             <td><?php echo $producto['marca'] ?></td>
                             <td><?php echo $producto['descripcion'] ?></td>
                             <td><?php echo $producto['precio'] ?></td>

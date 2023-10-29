@@ -11,14 +11,14 @@ $resultados_por_pagina = 15; // Define el número de resultados por página
 $offset = ($pagina_actual - 1) * $resultados_por_pagina;
 
 // Consulta SQL con paginación
-$sql = $con->prepare("SELECT id, nombre, precio FROM productos WHERE id_categoria = 12 AND activo = 1 LIMIT :offset, :resultados_por_pagina");
+$sql = $con->prepare("SELECT id, nombre, precio FROM productos WHERE id_categoria = 13 LIMIT :offset, :resultados_por_pagina");
 $sql->bindParam(':offset', $offset, PDO::PARAM_INT);
 $sql->bindParam(':resultados_por_pagina', $resultados_por_pagina, PDO::PARAM_INT);
 $sql->execute();
 $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
 
 // Contar el número total de resultados
-$sql_count = $con->prepare("SELECT COUNT(*) AS total FROM productos WHERE id_categoria = 12 AND activo = 1");
+$sql_count = $con->prepare("SELECT COUNT(*) AS total FROM productos WHERE id_categoria = 12");
 $sql_count->execute();
 $total_resultados = $sql_count->fetchColumn();
 
@@ -87,12 +87,8 @@ $total_paginas = ceil($total_resultados / $resultados_por_pagina);
                     <a href="detalles.php?id=<?php echo $row['id']; ?>&token=<?php echo hash_hmac('sha256', $row['id'], KEY_TOKEN); ?>"><h3><?php echo $row['nombre']; ?></h3> </a> 
                     <button class="btn-add-to-cart" type="button" onclick="addProducto(<?php echo $row['id']; ?>, 1,
                     '<?php echo hash_hmac('sha256', $row['id'], KEY_TOKEN); ?>')">Añadir al carrito</button>
-                    <!-- Este codigo de abajo sirve para agregar producto a la lista de deseos -->
                     <div class="btnAddDeseo" prod="<?php echo $row['id']; ?>">
-                    <button class="btn-add-to-cart" type="button" onclick="addProducto(<?php echo $row['id']; ?>,
-                     '<?php echo hash_hmac('sha256', $row['id'], KEY_TOKEN); ?>')">Añadir a favorito</button>
-
-
+                    <button class="btn-add-to-cart"> Añadir a favorito</button>
                     </div>
                 </div> 
                 

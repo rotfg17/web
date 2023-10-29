@@ -75,18 +75,17 @@ if(isset($_FILES['otras_imagenes'])){
     mkdir($dir, 0777, true); //con este codigo crea la carpeta a la direccion y da el permiso de crear las imagenes.
  }
 
- $contador = 1;
  foreach($_FILES['otras_imagenes']['tmp_name'] as $key => $tmp_name){ //este codigo sirve para seleccionar otras imagenes y subirlas todas
     $fileName = $_FILES["otras_imagenes"]["name"][$key];
     
     $arregloimg = explode('.', $_FILES['imagen_principal']['name']); //Si tu imagen tiene . por ejemplo 'imagen.jpg', este codigo lo interpretara como si fueron dos nombres y obviara el .
     $extension = strtolower(end($arregloimg)); //sirve para que coja el ultimo indice de la imagen y lo pasara a minuscula
 
+   $nuevoNombre = $dir . uniqid(). '.' . $extension;
+
     if(in_array($extension, $permitidos)){ //este codigo sirve para validar si las extensiones existen y darle permiso al id para crear una carpeta
-       $ruta_img = $dir . $contador .'.' . $extension;
-       if(move_uploaded_file($tmp_name, $ruta_img)){
+       if(move_uploaded_file($tmp_name, $nuevoNombre)){
           echo "Imagen principal cargada correctamente.<br>";
-          $contador++; 
           
          } else {
           echo "Error al cargar el archivo.";
@@ -96,6 +95,6 @@ if(isset($_FILES['otras_imagenes'])){
  } 
 }
 
-//header("Location: index.php");
+header("Location: index.php");
 
 ?>

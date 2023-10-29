@@ -101,7 +101,7 @@
                 <p id="num_cart" ><?php echo $num_cart;?></p></a>
             </div>
 
-            <a class="nav-icon position-relative text-decoration-none btn btn-warning mb-2 p-1" href="lista_deseo.php">
+            <a class="nav-icon position-relative text-decoration-none btn btn-warning mb-2 p-1" href="wishlist.php">
             <i class="fas fa-fw fa-heart text-dark mr-1"></i>
             <span class="position-absolute top-0 left-100 translate-middle badge rounded-pill text-white" id="btnCantidadDeseo">0</span>
             </a>
