@@ -2,13 +2,13 @@ const btnAddDeseo = document.querySelectorAll('.btnAddDeseo');
 const btnCantidadDeseo = document.querySelector('#btnCantidadDeseo');
 let listaDeseo = [];
 
-document.addEventListener('DOMContentLoaded', function(){
+document.addEventListener('DOMContentLoaded', function () {
     if (localStorage.getItem('listaDeseo') != null) {
         listaDeseo = JSON.parse(localStorage.getItem('listaDeseo'));
     }
     cantidadDeseo();
     for (let i = 0; i < btnAddDeseo.length; i++) {
-        btnAddDeseo[i].addEventListener('click', function(){
+        btnAddDeseo[i].addEventListener('click', function () {
             let idProducto = btnAddDeseo[i].getAttribute('prod');
             agregarDeseo(idProducto);
         });
@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', function(){
 });
 
 function agregarDeseo(idProducto) {
+
     if (listaDeseo.length > 0) {
         for (let i = 0; i < listaDeseo.length; i++) {
             if (listaDeseo[i]['idProducto'] === idProducto) {

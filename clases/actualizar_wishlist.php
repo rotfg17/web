@@ -1,6 +1,7 @@
 <?php
-require 'php/config.php';
-require 'php/database.php';
+
+require_once '../php/config.php';
+require_once '../php/database.php';
 
 if (isset($_POST['action'])) {
     $action = $_POST['action'];
@@ -30,12 +31,12 @@ function agregar($id, $cantidad)
 {
     $res = 0;
     if ($id > 0 && $cantidad > 0 && is_numeric($cantidad)) {
-        if (!isset($_SESSION['wishlist'])) {
-            $_SESSION['wishlist'] = array();
+        if (!isset($_SESSION['wishlist']['products'])) {
+            $_SESSION['wishlist']['products'] = array();
         }
 
-        if (!in_array($id, $_SESSION['wishlist'])) {
-            $_SESSION['wishlist'][] = $id;
+        if (!in_array($id, $_SESSION['wishlist']['products'])) {
+            $_SESSION['wishlist']['products'] = $id;
 
             // Aquí puedes realizar otras operaciones necesarias, como consultar la información del producto y calcular el subtotal.
 
@@ -49,9 +50,9 @@ function agregar($id, $cantidad)
 function eliminar($id)
 {
     if ($id > 0) {
-        if (isset($_SESSION['wishlist']) && in_array($id, $_SESSION['wishlist'])) {
-            $key = array_search($id, $_SESSION['wishlist']);
-            unset($_SESSION['wishlist'][$key]);
+        if (isset($_SESSION['wishlist']['products']) && in_array($id, $_SESSION['wishlist']['products'])) {
+            $key = array_search($id, $_SESSION['wishlist']['products']);
+            unset($_SESSION['wishlist']['products'][$key]);
 
             // Aquí puedes realizar otras operaciones necesarias.
 
@@ -61,4 +62,3 @@ function eliminar($id)
 
     return false;
 }
-?>
