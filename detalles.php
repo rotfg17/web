@@ -179,6 +179,7 @@ if ($id == '' || $token == '')  {
                 <button class="btn-cart" type="button">Comprar ahora</button>
                     <button class="btn-add-to-cart" type="button" onclick="addProducto(<?php echo $id; ?>, cantidad.value,
                      '<?php echo $token_tmp; ?>')">Añadir al carrito</button>
+                     
             </div>
             
 

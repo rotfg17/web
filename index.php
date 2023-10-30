@@ -105,7 +105,7 @@ $totalPaginas = ceil($totalRegistros / $elementosPorPagina);
                     <a href="herraminetas.php"><img src="img/herremientas.jpg" alt="herramientas"></a>  
                     <p>Construye con nuestras herramientas</p>
                 </div>
-              <a href="herraminetas.html" class="card-product-btn">Ver más →</a>  
+              <a href="herraminetas.php" class="card-product-btn">Ver más →</a>  
             </div>
         </div>
         <!--Aqui se termina una categoria-->
@@ -116,7 +116,7 @@ $totalPaginas = ceil($totalRegistros / $elementosPorPagina);
                     <a href="pintura.php"><img src="img/pinturas.jpg" alt="herramientas"></a>  
                     <p>Pinta tu hogar con lo mejor</p>
                 </div>
-              <a href="pintura.html" class="card-product-btn">Ver más →</a>  
+              <a href="pintura.php" class="card-product-btn">Ver más →</a>  
             </div>
         </div>
         <!--Aqui se termina una categoria-->

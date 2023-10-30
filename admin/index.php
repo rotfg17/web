@@ -37,7 +37,8 @@ if(!empty($_POST)) {
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Login - SB Admin</title>
+        <link rel="icon" type="image/png" sizes="128x128"  href="img/favicon.ico">
+        <title>Login - Ferre Seibo</title>
         <link href="css/styles.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
     </head>

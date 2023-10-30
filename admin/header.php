@@ -7,6 +7,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
+        <link rel="icon" type="image/png" sizes="128x128"  href="img/favicon.ico">
         <meta name="author" content="" />
         <title>Dashboard - Ferre Seibo<</title>
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
