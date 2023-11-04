@@ -35,7 +35,8 @@
                         <li><a class="dropdown-item" href="#!">Settings</a></li>
                         <li><a class="dropdown-item" href="#!">Configuración</a></li>
                         <li><hr class="dropdown-divider" /></li>
-                        <li><a class="dropdown-item" href="#!">Cerrar sesión</a></li>
+                        <li><a class="dropdown-item" href="logout.php">Cerrar sesión</a></li>
+                       
                     </ul>
                 </li>
             </ul>
