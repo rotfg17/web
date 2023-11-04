@@ -1,12 +1,14 @@
 <?php
 
-require 'php/database.php';
+
 require 'php/config.php';
 
 $db = new Database();
 $con = $db->conectar();
 
 $id_transaccion = isset($_GET['key']) ? $_GET['key'] : '0';
+
+
 
 $error = '';
 if($id_transaccion == ''){
@@ -16,7 +18,7 @@ if($id_transaccion == ''){
     $sql->execute([$id_transaccion, 'COMPLETED']);
     if($sql->fetchColumn() > 0 ) {
 
-        $sql = $con->prepare("SELECT id, fecha, correo, total FROM compra Where id_transaccion=? and status=? LIMIT 1");
+        $sql = $con->prepare("SELECT id, fecha, correo, total FROM compra Where id_transaccion= ? and status= ? LIMIT 1");
         $sql->execute([$id_transaccion, 'COMPLETED']);
         $row = $sql->fetch(PDO::FETCH_ASSOC);
 

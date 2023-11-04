@@ -6,7 +6,7 @@ class Database {
     private $hostname = "localhost";
     private $database = "ferreseibo_bd";
     private $username = "root";
-    private $password = "";
+    private $password = "Informatico1996!";
     private $charset = "utf8";
 
     function conectar()
