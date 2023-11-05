@@ -72,6 +72,7 @@ if ($id == '' || $token == '')  {
 
             // Se crea una instancia del directorio para explorar imágenes adicionales del producto.
             $dir = dir($dir_images);
+            
 
             // Se itera a través del directorio para obtener rutas de imágenes adicionales y almacenarlas en el array $imagenes.
             while(($archivo = $dir->read()) != false){
@@ -161,13 +162,14 @@ if ($id == '' || $token == '')  {
                     <p id="price">  Precio: <span id="price-value"><?php echo MONEDA . number_format($precio, 2, '.', ','); ?></span> (ITBIS Inc.)</p>
                 </div>
             </div>
-
             <div class="form-group">
+                
                 <?php
                 // Itera a través de las características del producto y muestra selecciones.
                 while($row_cat = $sqlCaracter->fetch(PDO::FETCH_ASSOC)){
                     $idCat = $row_cat['idCat'];
                     echo $row_cat['caracteristica'] . " ";
+                    
 
                     echo "<select class='form-group' id='cat_$idCat'>";
 
@@ -205,6 +207,7 @@ if ($id == '' || $token == '')  {
                 <button class="btn-cart" type="button">Comprar ahora</button>
                 <button class="btn-add-to-cart" type="button" onclick="addProducto(<?php echo $id; ?>, cantidad.value, '<?php echo $token_tmp; ?>')">Añadir al carrito</button>
             </div>
+            
 
             <div class="container-description">
                 <div class="title-description">

@@ -96,6 +96,7 @@ if ($productos != null) {
                         <a id="eliminar" class="btn btn-warning btn-lg xmark" data-bs-id="<?php echo $_id; ?>" data-bs-toggle="modal" data-bs-target="#eliminaModal">
                             <button type="button" class="btn-close" aria-label="Close"></button>
                         </a>
+                        
                     </div>
                 </div>
         <?php

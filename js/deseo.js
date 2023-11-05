@@ -44,7 +44,7 @@ function agregarDeseo(idProducto) {
     // Muestra un mensaje de aviso cuando se agrega el producto a la lista de deseos
     Swal.fire(
         'Aviso',
-        'Producto agregado a la lista de deseos correctamente',
+        'Producto agregado al carrito correctamente',
         'success'
     );
     cantidadDeseo(); // Actualiza la cantidad de productos en la lista de deseos en el elemento del DOM

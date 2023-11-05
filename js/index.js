@@ -61,24 +61,54 @@ function addProducto(id, cantidad, token) {
                 let elemento = document.getElementById("num_cart");
                 elemento.innerHTML = data.numero; // Actualiza el número de productos en el carrito
             }
+             // Muestra un mensaje de aviso cuando se agrega el producto a la lista de deseos
+    Swal.fire(
+        'Aviso',
+        'Producto agregado al carrito correctamente',
+        'success'
+    )
         });
 }
 
-// Agregar productos a la lista de deseos
+
 async function addProductToWishList(id, token) {
     let url = 'clases/wishlist.php'; // URL del script para agregar productos a la lista de deseos
     let formData = new FormData();
     formData.append('id', id); // Agrega el ID del producto
     formData.append('token', token); // Agrega un token (posiblemente para seguridad)
-    await fetch(url, {
-        method: "POST",
-        body: formData,
-        mode: 'cors'
-    }).then(response => response.json())
-        .then(data => {
-            if (data.ok) {
-                let elemento = document.getElementById("num_whislist");
-                elemento.innerHTML = data.numero; // Actualiza el número de productos en la lista de deseos
-            }
+
+    try {
+        const response = await fetch(url, {
+            method: "POST",
+            body: formData,
+            mode: 'cors'
         });
+
+        const data = await response.json();
+
+        if (data.ok) {
+            let elemento = document.getElementById("num_whislist");
+            elemento.innerHTML = data.numero; // Actualiza el número de productos en la lista de deseos
+
+            // Verifica si el producto ya está en la lista de deseos
+            if (data.exists) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Producto existente',
+                    text: 'El producto ya está en tu lista de deseos.',
+                });
+            } else {
+                // Muestra un mensaje de éxito si se agrega el producto a la lista de deseos
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Agregado a la lista de deseos',
+                    text: 'El producto ha sido agregado a tu lista de deseos.',
+                });
+            }
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
 }
+
+
