@@ -1,53 +1,67 @@
 <?php
+// Inicio de la sección de código PHP.
+
+// Se incluye el archivo 'config.php' ubicado en la carpeta 'php'.
 require 'php/config.php';
+
+// Se incluye el archivo 'clienteFunciones.php' ubicado en la carpeta 'clases'.
 require 'clases/clienteFunciones.php';
 
-$user_id =$_GET['id'] ?? $_POST['user_id'] ?? ''; 
-$token =$_GET['token'] ?? $_POST['token'] ?? '';
+// Se intenta obtener el valor de 'user_id' y 'token' desde la solicitud GET o POST.
+$user_id = $_GET['id'] ?? $_POST['user_id'] ?? ''; 
+$token = $_GET['token'] ?? $_POST['token'] ?? '';
 
-if($user_id =='' || $token ==''){
+// Si alguno de los valores es vacío, se redirige a la página de inicio.
+if ($user_id == '' || $token == '') {
     header("Location: index.php");
     exit;
 }
 
+// Se crea una nueva instancia de la clase 'Database' para gestionar la conexión a la base de datos.
 $db = new Database();
 $con = $db->conectar();
 
-
+// Se crea un array llamado $errors para almacenar mensajes de error.
 $errors = [];
 
-if (!verificaTokenRequest($user_id, $token, $con)){
+// Se verifica si el token y el 'user_id' proporcionados son válidos.
+if (!verificaTokenRequest($user_id, $token, $con)) {
     echo "No se pudo verificar la información";
     exit;
 }
 
-if(!empty($_POST)){
-
-    
+// Si se ha enviado el formulario (POST), se procede a validar y procesar la solicitud.
+if (!empty($_POST)) {
+    // Se obtienen los valores de los campos del formulario y se eliminan espacios en blanco adicionales.
     $password = trim($_POST['password']);
     $repassword = trim($_POST['repassword']); 
 
-    if(esNulo([$user_id, $token, $password, $repassword])){
-        $errors[]="Todos los campos son obligatorios";
+    // Se valida si alguno de los campos del formulario está vacío y se agrega un mensaje de error si es así.
+    if (esNulo([$user_id, $token, $password, $repassword])) {
+        $errors[] = "Todos los campos son obligatorios";
     }
 
-    if(validaPassword($password, $repassword)){
+    // Se valida si las contraseñas coinciden y se agrega un mensaje de error si no coinciden.
+    if (validaPassword($password, $repassword)) {
         $errors[] = "Las contraseñas no coinciden.";
     }
 
-    if(count($errors) == 0){
+    // Si no hay mensajes de error en el array, se procede a actualizar la contraseña en la base de datos.
+    if (count($errors) == 0) {
         $pass_hash = password_hash($password, PASSWORD_DEFAULT);
-        if(activaPassword($user_id, $pass_hash, $con)){
-            echo "contraseña modificada.<b><a href='login.php'>Iniciar sesion</a>";
+        // Se intenta activar la nueva contraseña en la base de datos.
+        if (activaPassword($user_id, $pass_hash, $con)) {
+            echo "Contraseña modificada. <b><a href='login.php'>Iniciar sesión</a>";
             exit;
         } else {
-            $errors[] = "No se pudo cambiar la contraseña. Intentalo nuevamente";
+            $errors[] = "No se pudo cambiar la contraseña. Inténtalo nuevamente.";
         }
     }
-
 }
 
+// Fin de la sección de código PHP.
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">

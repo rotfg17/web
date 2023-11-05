@@ -1,42 +1,47 @@
 <?php  
 
-// Requiere los archivos necesarios
+// Incluye los archivos necesarios para la configuración y la conexión a la base de datos.
 require '../config/database.php';
 require '../config/config.php';
 
-// Verifica si el usuario está autenticado
+// Verifica si el usuario está autenticado. Si no lo está, redirige al usuario a la página de inicio.
 if (!isset($_SESSION['user_type'])){
    header('Location: ../index.php');
    exit;
 }
 
-// Verifica si el usuario es de tipo 'admin'
+// Verifica si el usuario es de tipo 'admin'. Si no lo es, redirige al usuario a la página de inicio general.
 if ($_SESSION['user_type'] != 'admin'){
     header('Location: ../../index.php');
     exit;
- }
+}
 
+// Crea una instancia de la clase Database para establecer la conexión con la base de datos.
 $db = new Database();
 $con = $db->conectar();
 
+// Obtiene el valor del parámetro 'id' desde la URL, que se utiliza para identificar el producto.
 $id = $_GET['id'];
 
-
+// Realiza una consulta SQL para obtener los detalles del producto con el ID proporcionado y asegura que el producto esté activo.
 $sql = $con->prepare("SELECT id, nombre, marca, descripcion, precio, descuento, stock, num_referencia, id_categoria 
 FROM productos WHERE id = ? AND activo = 1");
 $sql->execute([$id]);
 $productos = $sql->fetch(PDO::FETCH_ASSOC);
 
+// Realiza una consulta SQL para obtener todas las categorías activas en la base de datos.
 $sql = "SELECT id, nombre FROM categoria WHERE activo = 1";
 $resultado = $con->query($sql);
 $categorias = $resultado->fetchAll(PDO::FETCH_ASSOC);
 
+// Establece la ruta para las imágenes del producto y recopila los nombres de archivo de las imágenes disponibles en el directorio.
 $rutaImagenes = '../../img/productos/' . $id . '/';
 $imagenPrincipal = $rutaImagenes . 'principal.jpg';
 
 $imagenes = [];
 $dirInit = dir($rutaImagenes);
 
+// Recorre el directorio de imágenes y recopila los nombres de archivo de las imágenes disponibles.
 while (($archivo = $dirInit->read()) !== false) {
   if($archivo != 'principal.jpg' && (strpos($archivo, 'jpg') || strpos($archivo, 'jpeg')|| strpos($archivo, 'png') || strpos($archivo, 'webp'))){
     $image = $rutaImagenes . $archivo;
@@ -45,6 +50,7 @@ while (($archivo = $dirInit->read()) !== false) {
 }
 
 $dirInit->close();
+
 
 ?>
 

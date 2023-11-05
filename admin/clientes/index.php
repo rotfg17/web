@@ -6,16 +6,17 @@ require '../config/config.php';
 
 // Verifica si el usuario está autenticado
 if (!isset($_SESSION['user_type'])){
-   header('Location: ../index.php');
-   exit;
+    header('Location: ../index.php');
+    exit;
 }
 
 // Verifica si el usuario es de tipo 'admin'
 if ($_SESSION['user_type'] != 'admin'){
     header('Location: ../../index.php');
     exit;
- }
+}
 
+// Crea una instancia de la clase Database para conectarse a la base de datos
 $db = new Database();
 $con = $db->conectar();
 
@@ -23,23 +24,30 @@ $con = $db->conectar();
 $porPagina = 15; // Número de resultados por página
 $pagina = isset($_GET['pagina']) ? $_GET['pagina'] : 1; // Página actual
 
-// Consulta SQL
-$sql = "SELECT id, nombres, apellidos, correo, telefono, cedula  FROM clientes WHERE activo = 1";
+// Consulta SQL para obtener todos los clientes activos
+$sql = "SELECT id, nombres, apellidos, correo, telefono, cedula FROM clientes WHERE activo = 1";
+
+// Realiza la consulta para obtener el total de resultados
 $resultado = $con->query($sql);
 
-// Total de resultados
+// Calcula el número total de resultados
 $totalResultados = $resultado->rowCount();
 
-// Calcular el número total de páginas
+// Calcula el número total de páginas necesarias para mostrar los resultados paginados
 $totalPaginas = ceil($totalResultados / $porPagina);
 
-// Calcular el índice de inicio
+// Calcula el índice de inicio para la consulta paginada
 $indiceInicio = ($pagina - 1) * $porPagina;
 
-// Consulta para obtener los resultados de la página actual
+// Construye una nueva consulta SQL para obtener los resultados de la página actual
 $sqlPaginacion = $sql . " LIMIT $indiceInicio, $porPagina";
+
+// Realiza la consulta paginada para obtener los clientes de la página actual
 $resultadoPaginacion = $con->query($sqlPaginacion);
+
+// Almacena los resultados de la página actual en un array llamado $clientes
 $clientes = $resultadoPaginacion->fetchAll(PDO::FETCH_ASSOC);
+
 
 
 ?>

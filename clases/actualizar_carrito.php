@@ -1,13 +1,16 @@
 <?php
 
+// Incluye los archivos necesarios
 require_once '../php/config.php';
 require_once '../php/database.php';
 
+// Verifica si se ha enviado una acción por POST
 if(isset($_POST['action'])){
 
     $action = $_POST['action'];
     $id = isset($_POST['id']) ? $_POST['id'] : 0;
 
+    // Realiza diferentes acciones dependiendo de la acción especificada
     if ($action == 'agregar') {
         $cantidad = isset($_POST['cantidad']) ? $_POST['cantidad'] : 0;
         $respuesta = agregar($id, $cantidad);
@@ -18,20 +21,18 @@ if(isset($_POST['action'])){
         }
         $datos['sub'] = MONEDA . number_format($respuesta, 2, '.', ',');
     } else if($action == 'eliminar') {
-       $datos['ok'] = eliminar($id);
-    
+        $datos['ok'] = eliminar($id);
+    } else {
+        $datos['ok'] = false;
+    }
 } else {
     $datos['ok'] = false;
 }
-} else {
-    $datos['ok'] = false;
-} 
 
-
-
-
+// Convierte los datos en un formato JSON y los envía de vuelta
 echo json_encode($datos);
 
+// Función para agregar un producto al carrito
 function agregar($id, $cantidad){
 
     $res = 0;
@@ -49,7 +50,6 @@ function agregar($id, $cantidad){
             $precio_des = $precio - (($precio * $descuento ) / 100);
             $res = $cantidad * $precio_des;
 
-
             return $res;
         }
     } else {
@@ -57,7 +57,7 @@ function agregar($id, $cantidad){
     }
 }
 
-
+// Función para eliminar un producto del carrito
 function eliminar($id) {
     if($id > 0) {
         if(isset($_SESSION['carrito']['productos'][$id])){

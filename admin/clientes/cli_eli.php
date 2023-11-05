@@ -6,22 +6,27 @@ require '../config/config.php';
 
 // Verifica si el usuario está autenticado
 if (!isset($_SESSION['user_type'])){
-   header('Location: ../index.php');
-   exit;
+    header('Location: ../index.php');
+    exit;
 }
 
 // Verifica si el usuario es de tipo 'admin'
 if ($_SESSION['user_type'] != 'admin'){
     header('Location: ../../index.php');
     exit;
- }
+}
 
+// Crea una instancia de la clase Database para conectarse a la base de datos
 $db = new Database();
 $con = $db->conectar();
 
+// Prepara una consulta SQL para seleccionar clientes inactivos
 $sql = "SELECT id, nombres, apellidos, correo, telefono, cedula FROM clientes WHERE activo = 0";
 $resultado = $con->query($sql);
+
+// Recopila los datos de clientes inactivos y almacena en un arreglo asociativo
 $clientes = $resultado->fetchAll(PDO::FETCH_ASSOC);
+
 
 ?>
 

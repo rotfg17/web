@@ -1,29 +1,39 @@
 <?php 
 
-require 'config/config.php';
-require 'config/database.php';
-require 'clases/adminFunciones.php';
-
-$db = new Database();
-$con = $db->conectar();
-
 /*$password = password_hash('admin', PASSWORD_DEFAULT);
 $sql = "INSERT INTO admin (usuario, password, nombre, correo_electronico, activo, fecha_alta)
 VALUES ('admin','$password','Administrador', 'robinsonchalasj@gmail.com', '1', NOW())";
 $con->query($sql);*/
 
+// Se requieren los archivos necesarios, incluyendo la configuración y la base de datos.
+require 'config/config.php';
+require 'config/database.php';
+require 'clases/adminFunciones.php';
+
+// Se crea una instancia de la clase Database para manejar la conexión a la base de datos.
+$db = new Database();
+$con = $db->conectar();
+
+// Sección comentada que inserta un registro de administrador si es necesario.
+
+// Se inicializa un array para almacenar mensajes de error.
 $errors = [];
 
-if(!empty($_POST)) {
+// Si se ha enviado un formulario (POST)...
+if (!empty($_POST)) {
+    // Se obtienen y se limpian los valores de usuario y contraseña del formulario.
     $usuario = trim($_POST['usuario']);
     $password = trim($_POST['password']);
 
-    if(esNulo([$usuario, $password])) {
+    // Si alguno de los campos está vacío, se agrega un mensaje de error.
+    if (esNulo([$usuario, $password])) {
         $errors[] = "Debe llenar todos los campos";
-    } 
+    }
 
-    if(count($errors) == 0) {
-       $errors[] = login($usuario, $password, $con);
+    // Si no se han acumulado mensajes de error hasta este punto...
+    if (count($errors) == 0) {
+        // Se intenta iniciar sesión llamando a la función 'login' con los datos proporcionados.
+        $errors[] = login($usuario, $password, $con);
     }
 }
 

@@ -1,23 +1,24 @@
 <?php  
 
 // Requiere los archivos necesarios
-require '../config/database.php';
-require '../config/config.php';
+require '../config/database.php'; // Incluye el archivo que define la clase de base de datos
+require '../config/config.php';  // Incluye el archivo de configuración con constantes y la inicialización de la sesión
 
 // Verifica si el usuario está autenticado
 if (!isset($_SESSION['user_type'])){
-   header('Location: ../index.php');
-   exit;
+   header('Location: ../index.php'); // Redirige al inicio si el usuario no está autenticado
+   exit; // Finaliza la ejecución del script
 }
 
 // Verifica si el usuario es de tipo 'admin'
 if ($_SESSION['user_type'] != 'admin'){
-    header('Location: ../../index.php');
-    exit;
- }
+    header('Location: ../../index.php'); // Redirige al inicio principal si el usuario no es un administrador
+    exit; // Finaliza la ejecución del script
+}
 
-$db = new Database();
-$con = $db->conectar();
+$db = new Database(); // Crea una instancia de la clase Database para gestionar la conexión a la base de datos
+$con = $db->conectar(); // Establece una conexión a la base de datos y almacena el objeto de conexión en la variable $con
+
 
 ?>
 

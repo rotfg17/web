@@ -1,27 +1,39 @@
 <?php
+// Inicio de la sección de código PHP.
 
+// Se incluye el archivo 'config.php' ubicado en la carpeta 'php'.
 require 'php/config.php';
 
-// Crear la conexión a la base de datos
+// Se crea una nueva instancia de la clase 'Database' para gestionar la conexión a la base de datos.
 $db = new Database();
 $con = $db->conectar();
 
+// Se intenta obtener la lista de productos de la lista de deseos desde la sesión.
 $productos = isset($_SESSION['wishlist']['products']) ? $_SESSION['wishlist']['products'] : null;
 
+// Se crea un array llamado $wishlist para almacenar la información de los productos de la lista de deseos.
 $wishlist = array();
 
+// Si existen productos en la lista de deseos, se procede a obtener información adicional de la base de datos.
 if ($productos != null) {
 
+    // Recorre la lista de productos de la lista de deseos.
     foreach ($productos as $clave) {
 
-        $sql = $con->prepare("SELECT id, nombre, precio,descuento  FROM productos WHERE id=? ");
+        // Se prepara una consulta SQL para obtener información del producto con el ID actual.
+        $sql = $con->prepare("SELECT id, nombre, precio, descripcion, descuento FROM productos WHERE id=? ");
+        
+        // Se ejecuta la consulta con el ID del producto actual.
         $sql->execute([$clave]);
+        
+        // Se recupera la información del producto y se agrega al array $wishlist.
         $wishlist[] = $sql->fetch(PDO::FETCH_ASSOC);
     }
 }
 
-
+// Fin de la sección de código PHP.
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -43,45 +55,56 @@ if ($productos != null) {
     <?php include 'menu.php'; ?>
 
     <main>
-        <div class="container p-4">
-            <h1>Mi lista de deseos</h1>
-            <hr>
+    <div class="container p-4">
+        <h1>Mi lista de deseos</h1>
+        <hr>
 
-            <?php if ($wishlist == null) {
-                echo '<div class="card mb-4">';
-                echo '<div class="card-header">¡Tu lista de deseos está lista para ser llenada! Agrega tus productos favoritos!</div>';
-                echo '</div>';
-            } else {
-                $sql = $con->prepare("SELECT count(id) as count FROM productos WHERE id=?");
+        <?php
+        // Comprueba si la lista de deseos está vacía (sin productos).
+        if ($wishlist == null) {
+            echo '<div class="card mb-4">';
+            echo '<div class="card-header">¡Tu lista de deseos está lista para ser llenada! Agrega tus productos favoritos!</div>';
+            echo '</div>';
+        } else {
+            // Si la lista de deseos no está vacía, muestra los productos en la lista.
+            $total = 0;
 
-                $total = 0;
-                foreach ($wishlist as $producto) {
-                    $_id = $producto['id'];
-                    $nombre = $producto['nombre'];
-                    $precio = $producto['precio'];
-                    $precio_desc = $producto['precio'] - (($producto['precio'] * $producto['descuento']) / 100);
-                    $subtotal = $precio_desc; // Precio total del producto (sin cantidad)
-                    $total += $subtotal;
-                    $imagen_producto = "img/productos/" . $_id . "/principal.jpg";
-            ?>
-                    <div class="card mb-4">
-                        <div class="card-body">
-                            <td><img src="<?php echo $imagen_producto; ?>" width="70" height="70"></td>
-                            <h5 class="card-title"><?php echo $nombre; ?></h5>
-                            <div id="subtotal_<?php echo $_id; ?>" name="subtotal[]"><?php echo MONEDA . number_format($subtotal, 2, '.', ','); ?></div>
-                            <a id="eliminar" class="btn btn-warning btn-lg xmark" data-bs-id="<?php echo $_id; ?>" data-bs-toggle="modal" data-bs-target="#eliminaModal">
-                                <button type="button" class="btn-close" aria-label="Close"></button>
-                            </a>
-                        </div>
+            // Itera a través de cada producto en la lista de deseos.
+            foreach ($wishlist as $producto) {
+                $_id = $producto['id'];
+                $nombre = $producto['nombre'];
+                $precio = $producto['precio'];
+                $descripcion = $producto['descripcion'];
+                $precio_desc = $producto['precio'] - (($producto['precio'] * $producto['descuento']) / 100);
+                $subtotal = $precio_desc; // Precio total del producto (sin cantidad)
+                $total += $subtotal;
+                $imagen_producto = "img/productos/" . $_id . "/principal.jpg";
+                $detalles_url = "detalles.php?id=" . $_id . "&token=" . hash_hmac('sha256', $_id, KEY_TOKEN);
+                // Reemplaza 'detalles_producto.php' con la URL real de la página de detalles del producto.
+
+                // Comienza la estructura HTML para mostrar la información del producto.
+        ?>
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <a href="<?php echo $detalles_url; ?>">
+                            <img src="<?php echo $imagen_producto; ?>" width="70" height="70">
+                        </a>
+                        <h5 class="card-title">
+                            <a href="<?php echo $detalles_url; ?>" class="text-reset"><?php echo $descripcion; // Esta información es para el texto ?></a>
+                        </h5>
+                        <div id="subtotal_<?php echo $_id; ?>" name="subtotal[]"><?php echo MONEDA . number_format($subtotal, 2, '.', ','); ?></div>
+                        <a id="eliminar" class="btn btn-warning btn-lg xmark" data-bs-id="<?php echo $_id; ?>" data-bs-toggle="modal" data-bs-target="#eliminaModal">
+                            <button type="button" class="btn-close" aria-label="Close"></button>
+                        </a>
                     </div>
-                <?php } ?>
-        </div>
-    <?php } ?>
+                </div>
+        <?php
+                // Finaliza la estructura HTML para mostrar la información del producto.
+            }
+        }
+        ?>
     </div>
-    </main>
-
-
-
+</main>
 
 
     <!-- Modal -->

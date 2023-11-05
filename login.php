@@ -1,29 +1,44 @@
 <?php
+// Inicio de la sección de código PHP.
+
+// Se incluye el archivo 'config.php' ubicado en la carpeta 'php'.
 require 'php/config.php';
+
+// Se incluye el archivo 'clienteFunciones.php' ubicado en la carpeta 'clases'.
 require 'clases/clienteFunciones.php';
 
+// Se crea una nueva instancia de la clase 'Database' para gestionar la conexión a la base de datos.
 $db = new Database();
+
+// Se establece una conexión a la base de datos y se asigna a la variable $con.
 $con = $db->conectar();
 
+// Se determina el valor de la variable $proceso basado en la presencia del parámetro 'pago' en la URL.
 $proceso = isset($_GET['pago']) ? 'pago' : 'login';
 
-
+// Se crea un array vacío para almacenar errores de validación.
 $errors = [];
 
-if(!empty($_POST)){
-
+// Se verifica si se ha enviado el formulario a través del método POST.
+if (!empty($_POST)) {
+    // Se obtienen y limpian los valores enviados a través del formulario.
     $usuario = trim($_POST['usuario']);
     $password = trim($_POST['password']);
     $proceso = $_POST['proceso'] ?? 'login';
 
-    if(esNulo([$usuario, $password])){
-        $errors[]="Todos los campos son obligatorios";
+    // Se verifica si los campos de usuario y contraseña no están vacíos.
+    if (esNulo([$usuario, $password])) {
+        $errors[] = "Todos los campos son obligatorios";
     }
-    if (count($errors) ==0 ){
-    $errors[] = login($usuario, $password, $con, $proceso);
+
+    // Si no hay errores de validación, se intenta realizar el proceso de inicio de sesión o pago.
+    if (count($errors) == 0) {
+        // Se llama a la función 'login' para procesar el inicio de sesión o pago y se almacena cualquier error resultante.
+        $errors[] = login($usuario, $password, $con, $proceso);
     }
 }
 
+// Fin de la sección de código PHP.
 ?>
 
 <!DOCTYPE html>

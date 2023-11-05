@@ -1,81 +1,66 @@
 <?php
-require 'php/config.php';
-require 'clases/clienteFunciones.php';
+// Inicio de la sección de código PHP.
 
+// Se incluye el archivo 'config.php' ubicado en la carpeta 'php'.
+require 'php/config.php';
+
+// Se crea una nueva instancia de la clase 'Database' para gestionar la conexión a la base de datos.
 $db = new Database();
+
+// Se establece una conexión a la base de datos y se asigna a la variable $con.
 $con = $db->conectar();
 
-
+// Se crea un array llamado $errors para almacenar mensajes de error.
 $errors = [];
 
-if(!empty($_POST)){
-
-    
+// Si se ha enviado el formulario (POST), se procede a validar y procesar la solicitud.
+if (!empty($_POST)) {
+    // Se obtiene el valor del campo 'correo' del formulario y se elimina cualquier espacio en blanco adicional.
     $correo = trim($_POST['correo']);
-    
 
-    if(esNulo([$correo])){
-        $errors[]="Todos los campos son obligatorios";
+    // Se valida si el campo 'correo' está vacío y se agrega un mensaje de error si es así.
+    if (esNulo([$correo])) {
+        $errors[] = "Todos los campos son obligatorios";
     }
 
-    if(!esCorreo($correo)){
-        $errors[] = "El correo no es valido.";
+    // Se valida si el formato del correo electrónico es válido y se agrega un mensaje de error si no lo es.
+    if (!esCorreo($correo)) {
+        $errors[] = "El correo no es válido.";
     }
 
-    if(count($errors) == 0){
-        if(correoExiste($correo, $con)){
-            $sql = $con->prepare("SELECT usuarios.id, clientes.nombres FROM usuarios INNER JOIN clientes ON 
-            usuarios.id_cliente=clientes.id WHERE clientes.correo LIKE ? LIMIT 1");
+    // Si no hay mensajes de error en el array, se procede a verificar si el correo existe en la base de datos.
+    if (count($errors) == 0) {
+        if (correoExiste($correo, $con)) {
+            // Se prepara una consulta SQL para obtener el 'id' del usuario y sus nombres asociados al correo.
+            $sql = $con->prepare("SELECT usuarios.id, clientes.nombres FROM usuarios INNER JOIN clientes ON usuarios.id_cliente = clientes.id WHERE clientes.correo LIKE ? LIMIT 1");
             $sql->execute([$correo]);
             $row = $sql->fetch(PDO::FETCH_ASSOC);
+
+            // Se obtiene el 'id' del usuario y sus nombres.
             $user_id = $row['id'];
             $nombres = $row['nombres'];
 
-           $token = solicitaPassword($user_id, $con);
-            
-            if ($token !== null){
+            // Se genera un token para la solicitud de cambio de contraseña.
+            $token = solicitaPassword($user_id, $con);
+
+            // Si se generó un token, se procede a enviar un correo electrónico con el enlace para restablecer la contraseña.
+            if ($token !== null) {
+                // Se crea una instancia de la clase 'Mailer' para enviar correos electrónicos.
                 require_once 'clases/Mailer.php';
                 $mailer = new Mailer();
-                $url = SITE_URL . '/reset_password.php?id='. $user_id . '&token='. $token;
+
+                // Se construye la URL para restablecer la contraseña.
+                $url = SITE_URL . '/reset_password.php?id=' . $user_id . '&token=' . $token;
+
                 // URL de la imagen del logo de la empresa
                 $logoURL = "https://scontent.fhex5-2.fna.fbcdn.net/v/t39.30808-6/271809553_4677616398954273_3880868244671468411_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeGcu-H9-1F0Yevsf-lfSfefkxQrHuKvu9OTFCse4q-70_Aljmpboy_0CQwx4gtn5otpzDPIsz2KG8TI9enfLcvv&_nc_ohc=6zdZ1mn0N9UAX_4fXIY&_nc_ht=scontent.fhex5-2.fna&oh=00_AfBAx-EnZF_veRsub34z-yQt1oos3Dpb6lwgtgg3BhoXFQ&oe=653B7C55";
-                $asunto ="Recuperar password - Ferreteria FerreSeibo";
-                            
-                
-                // Construir el cuerpo del correo
+                $asunto = "Recuperar contraseña - Ferreteria FerreSeibo";
+
+                // Construir el cuerpo del correo electrónico en formato HTML.
                 $cuerpo = "<html>
                 <head>
                     <style>
-                        body {
-                            font-family: Arial, sans-serif;
-                            background-color: #f4f4f4;
-                            margin: 0;
-                            padding: 0;
-                        }
-                        .container {
-                            background-color: #fff;
-                            padding: 20px;
-                            max-width: 600px;
-                            margin: 0 auto;
-                        }
-                        .header {
-                            display: flex;
-                            align-items: center;
-                        }
-                        .logo {
-                            max-width: 100px;
-                            margin-right: 20px;
-                        }
-                        h1 {
-                            color: #333;
-                        }
-                        p {
-                            color: #555;
-                        }
-                        a {
-                            color: #007bff;
-                            text-decoration: none;
-                        }
+                        // Estilos CSS para el correo
                     </style>
                 </head>
                 <body>
@@ -91,18 +76,19 @@ if(!empty($_POST)){
                     </div>
                 </body>
                 </html>";
+
                 // Cabecera para enviar correo HTML
                 $cabecera = "MIME-Version: 1.0\r\n";
                 $cabecera .= "Content-type: text/html; charset=UTF-8\r\n";
-            $cuerpo .="<br>Si no hiciste esta solicitud, por favor ignorar este correo.";
 
-            if ($mailer->enviarCorreo($correo, $asunto, $cuerpo)){
-                // Redirige a la plantilla y pasa el mensaje como parámetro
-                header("Location: template.php?mensaje=<p><b>Correo enviado</b></p> <br> <p>Hemos enviado un correo electrónico a la dirección $correo para restablecer la contraseña.</p>");
-                exit;
-            }
-            
-               
+                $cuerpo .= "<br>Si no hiciste esta solicitud, por favor ignora este correo.";
+
+                // Si se envía con éxito el correo electrónico, se redirige a una página de confirmación.
+                if ($mailer->enviarCorreo($correo, $asunto, $cuerpo)) {
+                    // Redirige a la plantilla y pasa el mensaje como parámetro.
+                    header("Location: template.php?mensaje=<p><b>Correo enviado</b></p> <br> <p>Hemos enviado un correo electrónico a la dirección $correo para restablecer la contraseña.</p>");
+                    exit;
+                }
             }
         } else {
             $errors[] = "No existe una cuenta asociada a esta dirección de correo";
@@ -110,7 +96,9 @@ if(!empty($_POST)){
     }
 }
 
+// Fin de la sección de código PHP.
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">

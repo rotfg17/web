@@ -1,36 +1,38 @@
 <?php  
 
-// Requiere los archivos necesarios
+// Incluye los archivos necesarios para la configuración y la conexión a la base de datos
 require '../config/database.php';
 require '../config/config.php';
 require '../clases/cifrado.php';
 
 // Verifica si el usuario está autenticado
-if (!isset($_SESSION['user_type'])){
-   header('Location: ../index.php');
+if (!isset($_SESSION['user_type'])) {
+   header('Location: ../index.php'); // Redirige a la página de inicio si el usuario no está autenticado
    exit;
 }
 
 // Verifica si el usuario es de tipo 'admin'
-if ($_SESSION['user_type'] != 'admin'){
-    header('Location: ../../index.php');
+if ($_SESSION['user_type'] != 'admin') {
+    header('Location: ../../index.php'); // Redirige a la página de inicio general si el usuario no es un administrador
     exit;
- }
+}
 
- 
-
+// Establece la conexión a la base de datos
 $db = new Database();
 $con = $db->conectar();
 
+// Consulta SQL para obtener la configuración del sistema
 $sql = "SELECT nombre, valor FROM configuracion";
 $resultado = $con->query($sql);
 $datos = $resultado->fetchAll(PDO::FETCH_ASSOC);
 
 $config = [];
 
+// Recorre los datos de configuración y almacena en un array asociativo
 foreach($datos as $dato){
     $config[$dato['nombre']] = $dato['valor'];
 }
+
 
 ?>
 

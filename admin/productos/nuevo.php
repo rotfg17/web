@@ -1,27 +1,34 @@
 <?php  
 
-// Requiere los archivos necesarios
+// Requiere los archivos necesarios para la configuración de la base de datos y otras funciones.
 require '../config/database.php';
 require '../config/config.php';
 
-// Verifica si el usuario está autenticado
+// Verifica si el usuario está autenticado. Si no lo está, redirige al usuario a la página de inicio.
 if (!isset($_SESSION['user_type'])){
    header('Location: ../index.php');
    exit;
 }
 
-// Verifica si el usuario es de tipo 'admin'
+// Verifica si el usuario es de tipo 'admin'. Si no lo es, redirige al usuario a la página de inicio general.
 if ($_SESSION['user_type'] != 'admin'){
     header('Location: ../../index.php');
     exit;
- }
+}
 
+// Crea una instancia de la clase Database para establecer la conexión con la base de datos.
 $db = new Database();
 $con = $db->conectar();
 
+// Define una consulta SQL para seleccionar las categorías activas (aquellas con 'activo' igual a 1) en la tabla 'categoria'.
 $sql = "SELECT id, nombre FROM categoria WHERE activo = 1";
+
+// Ejecuta la consulta SQL y almacena los resultados en la variable 'resultado'.
 $resultado = $con->query($sql);
+
+// Obtiene todas las filas de resultados como un arreglo asociativo y las almacena en la variable 'categorias'.
 $categorias = $resultado->fetchAll(PDO::FETCH_ASSOC);
+
 
 ?>
 

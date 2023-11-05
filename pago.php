@@ -1,30 +1,40 @@
 <?php
+// Inicio de la sección de código PHP.
 
+// Se incluye el archivo 'config.php' ubicado en la carpeta 'php'.
 require 'php/config.php';
 
-// Crear la conexión a la base de datos
+// Se crea una nueva instancia de la clase 'Database' para gestionar la conexión a la base de datos.
 $db = new Database();
+
+// Se establece una conexión a la base de datos y se asigna a la variable $con.
 $con = $db->conectar();
 
+// Se recupera la lista de productos del carrito almacenada en la sesión, o se establece como nula si no existe.
 $productos = isset($_SESSION['carrito']['productos']) ? $_SESSION['carrito']['productos'] : null;
 
-
+// Se crea un array vacío llamado $lista_carrito para almacenar los detalles de los productos del carrito.
 $lista_carrito = array();
 
+// Si hay productos en el carrito, se procede a obtener información detallada sobre cada uno de ellos.
 if ($productos != null) {
     foreach ($productos as $clave => $cantidad) {
-     
-        $sql = $con->prepare("SELECT id, nombre, precio,descuento, $cantidad AS cantidad FROM productos WHERE id=? "); 
+        // Se prepara una consulta SQL para seleccionar información de productos basada en su 'id'.
+        $sql = $con->prepare("SELECT id, nombre, precio, descuento, $cantidad AS cantidad FROM productos WHERE id=? ");
+        
+        // Se ejecuta la consulta SQL con el 'id' del producto y se almacena la información en $lista_carrito.
         $sql->execute([$clave]);
         $lista_carrito[] = $sql->fetch(PDO::FETCH_ASSOC);
     }
 } else {
+    // Si no hay productos en el carrito, se redirige al usuario a la página de inicio y se finaliza la ejecución del script.
     header("location: index.php");
     exit;
 }
 
-
+// Fin de la sección de código PHP.
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -101,14 +111,13 @@ if ($productos != null) {
         </div>
     </div>
 </div>
-    
 </main>
-
-
 
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
 <script src="https://www.paypal.com/sdk/js?client-id=<?php echo CLIENT_ID; ?>&currency=<?php echo CURRENCY;?>"></script>
+
+
 <script>
     paypal.Buttons({
         style: {
@@ -117,6 +126,7 @@ if ($productos != null) {
             label: 'pay'
         },
         createOrder: function(data, actions) {
+
             // Monto en pesos dominicanos (DOP) que deseas recibir
             var monto_en_dop = <?php echo $total; ?>;
             
@@ -150,7 +160,10 @@ if ($productos != null) {
                 }).then(function(response) {
                     window.location.href = "completado.php?key=" + detalles['id'];
                 })
+                // Llamar a la función para ocultar el loader
+                hideLoader();
             });
+
         },
         onCancel: function(data) {
             alert('Pago Cancelado');

@@ -1,27 +1,34 @@
 <?php  
 
-// Requiere los archivos necesarios
+// Requiere los archivos necesarios para la configuración de la base de datos y otras funciones.
 require '../config/database.php';
 require '../config/config.php';
 
-// Verifica si el usuario está autenticado
+// Verifica si el usuario está autenticado. Si no lo está, redirige al usuario a la página de inicio.
 if (!isset($_SESSION['user_type'])){
    header('Location: ../index.php');
    exit;
 }
 
-// Verifica si el usuario es de tipo 'admin'
+// Verifica si el usuario es de tipo 'admin'. Si no lo es, redirige al usuario a la página de inicio general.
 if ($_SESSION['user_type'] != 'admin'){
     header('Location: ../../index.php');
     exit;
- }
+}
 
+// Crea una instancia de la clase Database para establecer la conexión con la base de datos.
 $db = new Database();
 $con = $db->conectar();
 
+// Define una consulta SQL para seleccionar productos inactivos (aquellas con 'activo' igual a 0) en la tabla 'productos'.
 $sql = "SELECT id, nombre, marca, descripcion, precio, descuento, stock, num_referencia, id_categoria FROM productos WHERE activo = 0";
+
+// Ejecuta la consulta SQL y almacena los resultados en la variable 'resultado'.
 $resultado = $con->query($sql);
+
+// Obtiene todas las filas de resultados como un arreglo asociativo y las almacena en la variable 'productos'.
 $productos = $resultado->fetchAll(PDO::FETCH_ASSOC);
+
 
 ?>
 

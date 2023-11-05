@@ -1,20 +1,37 @@
 <?php
+// Inicio de la sección de código PHP.
+
+// Se incluye el archivo 'config.php' ubicado en la carpeta 'php'.
 require 'php/config.php';
+
+// Se incluye el archivo 'clienteFunciones.php' ubicado en la carpeta 'clases'.
 require 'clases/clienteFunciones.php';
 
+// Se crea una nueva instancia de la clase 'Database' para gestionar la conexión a la base de datos.
 $db = new Database();
+
+// Se establece una conexión a la base de datos y se asigna a la variable $con.
 $con = $db->conectar();
 
+// Se genera un token utilizando la función 'generarToken' (no se muestra en el código proporcionado).
 $token = generarToken();
+
+// Se almacena el token en la sesión del usuario para su posterior uso.
 $_SESSION['token'] = $token;
+
+// Se recupera el ID del cliente de la sesión y se asigna a la variable $idCliente.
 $idCliente = $_SESSION['user_cliente'];
 
-
+// Se prepara una consulta SQL para seleccionar datos de la tabla 'compra' basados en el 'idCliente' del usuario.
+// Los resultados se ordenan por fecha en orden descendente (últimas compras primero).
 $sql = $con->prepare("SELECT id_transaccion, fecha, status, total, medio_pago FROM compra WHERE id_cliente = :idCliente ORDER BY DATE(fecha) DESC");
+
+// Se ejecuta la consulta SQL, pasando el valor de ':idCliente' como un parámetro.
 $sql->execute([':idCliente' => $idCliente]);
 
-
+// Fin de la sección de código PHP.
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">

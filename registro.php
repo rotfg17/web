@@ -1,15 +1,19 @@
 <?php
-require 'php/config.php';
-require 'clases/clienteFunciones.php';
+// Inicio de la sección de código PHP.
 
+// Se incluye el archivo 'config.php' ubicado en la carpeta 'php'.
+require 'php/config.php';
+
+// Se crea una nueva instancia de la clase 'Database' para gestionar la conexión a la base de datos.
 $db = new Database();
 $con = $db->conectar();
 
-
+// Se crea un array llamado $errors para almacenar mensajes de error.
 $errors = [];
 
-if(!empty($_POST)){
-
+// Si se ha enviado el formulario (POST), se procede a validar y procesar la solicitud.
+if (!empty($_POST)) {
+    // Se obtienen los valores de los campos del formulario y se eliminan espacios en blanco adicionales.
     $nombres = trim($_POST['nombres']);
     $apellidos = trim($_POST['apellidos']);
     $correo = trim($_POST['correo']);
@@ -19,115 +23,103 @@ if(!empty($_POST)){
     $password = trim($_POST['password']);
     $repassword = trim($_POST['repassword']); 
 
-    if(esNulo([$nombres, $apellidos, $correo, $telefono, $cedula, $usuario, $password, $repassword])){
-        $errors[]="Todos los campos son obligatorios";
+    // Se valida si alguno de los campos del formulario está vacío y se agrega un mensaje de error si es así.
+    if (esNulo([$nombres, $apellidos, $correo, $telefono, $cedula, $usuario, $password, $repassword])) {
+        $errors[] = "Todos los campos son obligatorios";
     }
 
-    if(!esCorreo($correo)){
-        $errors[] = "El correo no es valido.";
+    // Se valida si el formato del correo electrónico es válido y se agrega un mensaje de error si no lo es.
+    if (!esCorreo($correo)) {
+        $errors[] = "El correo no es válido.";
     }
 
-    if(validaPassword($password, $repassword)){
+    // Se valida si las contraseñas coinciden y se agrega un mensaje de error si no coinciden.
+    if (validaPassword($password, $repassword)) {
         $errors[] = "Las contraseñas no coinciden.";
     }
 
-    if(usuarioExiste($usuario, $con)){
-        $errors[]= "Este usuario $usuario ya existe.";
+    // Se verifica si el nombre de usuario ya existe en la base de datos y se agrega un mensaje de error si es el caso.
+    if (usuarioExiste($usuario, $con)) {
+        $errors[] = "Este usuario $usuario ya existe.";
     }
 
-    if(correoExiste($correo, $con)){
-        $errors[]= "Este correo electrónico $correo ya existe.";
+    // Se verifica si el correo electrónico ya existe en la base de datos y se agrega un mensaje de error si es el caso.
+    if (correoExiste($correo, $con)) {
+        $errors[] = "Este correo electrónico $correo ya existe.";
     }
 
-    if(cedulaExiste($cedula, $con)){
-        $errors[]= "Esta cedula $cedula ya existe.";
+    // Se verifica si la cédula ya existe en la base de datos y se agrega un mensaje de error si es el caso.
+    if (cedulaExiste($cedula, $con)) {
+        $errors[] = "Esta cédula $cedula ya existe.";
     }
 
-    if(count($errors) == 0){
+    // Si no hay mensajes de error en el array, se procede a registrar el cliente y usuario en la base de datos.
+    if (count($errors) == 0) {
+        // Se registra al cliente y se obtiene su ID.
+        $id = registraCliente([$nombres, $apellidos, $correo, $telefono, $cedula], $con);
 
+        // Si se ha registrado el cliente con éxito, se procede a enviar un correo de activación.
+        if ($id > 0) {
+            // Se crea una instancia de la clase 'Mailer' para enviar correos electrónicos.
+            require_once 'clases/Mailer.php';
+            $mailer = new Mailer();
 
-   $id = registraCliente([$nombres, $apellidos, $correo, $telefono, $cedula], $con);
+            // Se genera un token para la activación de la cuenta.
+            $token = generarToken();
+            $pass_hash = password_hash($password, PASSWORD_DEFAULT);
 
+            // Se registra al usuario y se obtiene su ID.
+            $idUsuario = registraUsuario([$usuario, $pass_hash, $token, $id], $con);
 
-   if ($id > 0){
+            // Si se ha registrado el usuario con éxito, se procede a enviar un correo de activación.
+            if ($idUsuario > 0) {
+                $url = SITE_URL . '/activa_cliente.php?id=' . $idUsuario . '&token=' . $token;
+                $asunto = "Activar cuenta - Ferreteria FerreSeibo";
 
-        require_once 'clases/Mailer.php';
-        $mailer = new Mailer();
-        $token = generarToken();
-        $pass_hash = password_hash($password, PASSWORD_DEFAULT);
-        
-        $idUsuario = registraUsuario([$usuario, $pass_hash, $token, $id], $con);
-        if($idUsuario > 0){
-            $url = SITE_URL . '/activa_cliente.php?id='.$idUsuario .'&token='.$token;
-            // http://localhost/website/activa_cliente.php?id=1&token=3b95237c52253088d196259490fac3f7
-            $asunto ="Activar cuenta - Ferreteria FerreSeibo";
-            $logoURL = "https://scontent.fhex5-2.fna.fbcdn.net/v/t39.30808-6/271809553_4677616398954273_3880868244671468411_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeGcu-H9-1F0Yevsf-lfSfefkxQrHuKvu9OTFCse4q-70_Aljmpboy_0CQwx4gtn5otpzDPIsz2KG8TI9enfLcvv&_nc_ohc=6zdZ1mn0N9UAX_4fXIY&_nc_ht=scontent.fhex5-2.fna&oh=00_AfBAx-EnZF_veRsub34z-yQt1oos3Dpb6lwgtgg3BhoXFQ&oe=653B7C55";
+                // URL de la imagen del logo de la empresa
+                $logoURL = "https://scontent.fhex5-2.fna.fbcdn.net/v/t39.30808-6/271809553_4677616398954273_3880868244671468411_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeGcu-H9-1F0Yevsf-lfSfefkxQrHuKvu9OTFCse4q-70_Aljmpboy_0CQwx4gtn5otpzDPIsz2KG8TI9enfLcvv&_nc_ohc=6zdZ1mn0N9UAX_4fXIY&_nc_ht=scontent.fhex5-2.fna&oh=00_AfBAx-EnZF_veRsub34z-yQt1oos3Dpb6lwgtgg3BhoXFQ&oe=653B7C55";
 
-             // Construir el cuerpo del correo
-             $cuerpo = "<html>
-             <head>
-                 <style>
-                     body {
-                         font-family: Arial, sans-serif;
-                         background-color: #f4f4f4;
-                         margin: 0;
-                         padding: 0;
-                     }
-                     .container {
-                         background-color: #fff;
-                         padding: 20px;
-                         max-width: 600px;
-                         margin: 0 auto;
-                     }
-                     .header {
-                         display: flex;
-                         align-items: center;
-                     }
-                     .logo {
-                         max-width: 100px;
-                         margin-right: 20px;
-                     }
-                     h1 {
-                         color: #333;
-                     }
-                     p {
-                         color: #555;
-                     }
-                     a {
-                         color: #007bff;
-                         text-decoration: none;
-                     }
-                 </style>
-             </head>
-             <body>
-                 <div class='container'>
-                     <div class='header'>
-                         <img class='logo' src='$logoURL'>
-                         <h1>Activar cuenta</h1>
-                     </div>
-                     <p>Estimado $nombres,</p>
-                     <p>Para continuar con el proceso de registro, es obligatorio dar click
-                     en el siguiente enlace <a href='$url'>Activar cuenta</a></p>
-                     
-                 </div>
-             </body>
-             </html>";
+                // Construir el cuerpo del correo electrónico en formato HTML.
+                $cuerpo = "<html>
+                <head>
+                    <style>
+                        // Estilos CSS para el correo
+                    </style>
+                </head>
+                <body>
+                    <div class='container'>
+                        <div class='header'>
+                            <img class='logo' src='$logoURL'>
+                            <h1>Activar cuenta</h1>
+                        </div>
+                        <p>Estimado $nombres,</p>
+                        <p>Para continuar con el proceso de registro, es obligatorio dar click en el siguiente enlace <a href='$url'>Activar cuenta</a></p>
+                    </div>
+                </body>
+                </html>";
 
-            if ($mailer->enviarCorreo($correo, $asunto, $cuerpo)){
-                // Redirige a la plantilla y pasa el mensaje como parámetro
-                header("Location: template.php?mensaje=<p><b>Correo enviado</b></p> <br> <p>Hemos enviado un correo de confirmación a tu dirección de correo electrónico $correo. Por favor, verifica tu bandeja de entrada y sigue las instrucciones para activar tu cuenta.</p>");
-                exit;
+                // Cabecera para enviar correo HTML
+                $cabecera = "MIME-Version: 1.0\r\n";
+                $cabecera .= "Content-type: text/html; charset=UTF-8\r\n";
+
+                // Si se envía con éxito el correo electrónico, se redirige a una página de confirmación.
+                if ($mailer->enviarCorreo($correo, $asunto, $cuerpo)) {
+                    // Redirige a la plantilla y pasa el mensaje como parámetro.
+                    header("Location: template.php?mensaje=<p><b>Correo enviado</b></p> <br> <p>Hemos enviado un correo de confirmación a tu dirección de correo electrónico $correo. Por favor, verifica tu bandeja de entrada y sigue las instrucciones para activar tu cuenta.</p>");
+                    exit;
+                }
+            } else {
+                $errors[] = "Error al registrar usuario"; 
             }
-        } else {
-            $errors[] = "Error al registrar usuario"; 
-        }
         } else {
             $errors[] = "Error al registrar cliente";
         }
     }
 }
 
+// Fin de la sección de código PHP.
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">

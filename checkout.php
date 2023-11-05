@@ -1,27 +1,30 @@
 <?php
-
+// Incluye el archivo de configuración para obtener la configuración y las funciones de la base de datos.
 require 'php/config.php';
 
-// Crear la conexión a la base de datos
+// Crea una instancia de la clase Database para establecer una conexión a la base de datos.
 $db = new Database();
 $con = $db->conectar();
 
+// Obtiene la información de los productos del carrito desde la sesión.
 $productos = isset($_SESSION['carrito']['productos']) ? $_SESSION['carrito']['productos'] : null;
 
-
+// Crea un arreglo vacío para almacenar la lista de productos en el carrito.
 $lista_carrito = array();
 
+// Verifica si hay productos en el carrito antes de continuar.
 if ($productos != null) {
     foreach ($productos as $clave => $cantidad) {
-     
-        $sql = $con->prepare("SELECT id, nombre, precio,descuento, $cantidad AS cantidad FROM productos WHERE id=? "); 
+        // Prepara una consulta SQL para obtener detalles de los productos, incluyendo la cantidad especificada.
+        $sql = $con->prepare("SELECT id, nombre, precio, descuento, $cantidad AS cantidad FROM productos WHERE id=? ");
         $sql->execute([$clave]);
+
+        // Agrega los resultados de la consulta a la lista de productos en el carrito.
         $lista_carrito[] = $sql->fetch(PDO::FETCH_ASSOC);
     }
 }
-
-
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
     <head>

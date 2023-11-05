@@ -6,26 +6,31 @@ require '../config/config.php';
 
 // Verifica si el usuario está autenticado
 if (!isset($_SESSION['user_type'])){
-   header('Location: ../index.php');
-   exit;
+    header('Location: ../index.php');
+    exit;
 }
 
 // Verifica si el usuario es de tipo 'admin'
 if ($_SESSION['user_type'] != 'admin'){
     header('Location: ../../index.php');
     exit;
- }
+}
 
+// Crea una instancia de la clase Database para conectarse a la base de datos
 $db = new Database();
 $con = $db->conectar();
 
+// Obtiene los parámetros 'id' y 'nombres' desde la URL
 $id = $_GET['id'];
 $nombres = $_GET['nombres'];
 
-
+// Prepara una consulta SQL para seleccionar un cliente específico
 $sql = $con->prepare("SELECT id, nombres, apellidos, correo, telefono, cedula FROM clientes WHERE id = ? LIMIT 1");
 $sql->execute([$id]);
+
+// Recupera los datos del cliente encontrado y los almacena en un arreglo asociativo
 $cliente = $sql->fetch(PDO::FETCH_ASSOC);
+
 
 ?>
 

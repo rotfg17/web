@@ -1,34 +1,30 @@
 <?php
+require 'php/config.php'; // Incluye un archivo de configuración (no proporcionado en el código)
 
-require 'php/config.php';
-
-
-$db = new Database();
-$con = $db->conectar();
+$db = new Database(); // Crea una instancia de la clase Database para gestionar la conexión a la base de datos
+$con = $db->conectar(); // Establece una conexión a la base de datos
 
 // Parámetros de paginación
-$pagina_actual = isset($_GET['pagina']) ? intval($_GET['pagina']) : 1;
+$pagina_actual = isset($_GET['pagina']) ? intval($_GET['pagina']) : 1; // Obtiene el número de página actual
 $resultados_por_pagina = 15; // Define el número de resultados por página
-$offset = ($pagina_actual - 1) * $resultados_por_pagina;
+$offset = ($pagina_actual - 1) * $resultados_por_pagina; // Calcula el valor de desplazamiento (offset)
 
 // Consulta SQL con paginación
 $sql = $con->prepare("SELECT id, nombre, precio FROM productos WHERE id_categoria = 1 LIMIT :offset, :resultados_por_pagina");
-$sql->bindParam(':offset', $offset, PDO::PARAM_INT);
-$sql->bindParam(':resultados_por_pagina', $resultados_por_pagina, PDO::PARAM_INT);
-$sql->execute();
-$resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
+$sql->bindParam(':offset', $offset, PDO::PARAM_INT); // Asocia el valor de offset como un parámetro entero
+$sql->bindParam(':resultados_por_pagina', $resultados_por_pagina, PDO::PARAM_INT); // Asocia el valor de resultados_por_pagina como un parámetro entero
+$sql->execute(); // Ejecuta la consulta SQL
+$resultado = $sql->fetchAll(PDO::FETCH_ASSOC); // Obtiene los resultados de la consulta en un arreglo asociativo
 
 // Contar el número total de resultados
 $sql_count = $con->prepare("SELECT COUNT(*) AS total FROM productos WHERE id_categoria = 1");
-$sql_count->execute();
-$total_resultados = $sql_count->fetchColumn();
+$sql_count->execute(); // Ejecuta una consulta para contar el número total de resultados
+$total_resultados = $sql_count->fetchColumn(); // Obtiene el número total de resultados
 
 // Calcular el número total de páginas
-$total_paginas = ceil($total_resultados / $resultados_por_pagina);
-
-
-
+$total_paginas = ceil($total_resultados / $resultados_por_pagina); // Calcula el número total de páginas necesarias para la paginación
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -51,25 +47,27 @@ $total_paginas = ceil($total_resultados / $resultados_por_pagina);
    <div class="banner-especial -1r">
    <a href="http://www.pinturastropical.com.do/site/?page_id=165" target="_blank"><img class="img-responsive vdk" src="img/PINTURA.png" alt="Pintura" width="100%" height="auto" ></a> 
     </div>
-    <section class="product02"> 
+
+    <section class="product02">
     <div class="container-products" id="product-container">
-    <?php foreach($resultado as $row) {?>
+        <?php foreach ($resultado as $row) { ?>
+        <!-- Comienza un bucle para recorrer los resultados de productos -->
         <div class="product-card">
-        
             <div class="card-product">
                 <div class="container-img">
-                <?php 
+                    <?php
+                    $id = $row['id'];
+                    $imagen = "img/productos/" . $id . "/principal.jpg";
 
-            $id = $row['id'];
-            $imagen = "img/productos/" .$id. "/principal.jpg";
-
-            if (!file_exists($imagen)) {
-                $imagen = "img/no-photo.jpg";
-            }
-            
-            ?>
-            <a href="detalles.php?id=<?php echo $row['id']; ?>&token=<?php echo hash_hmac('sha256', $row['id'], KEY_TOKEN); ?>"> <img src="<?php echo $imagen; ?>"></a>
-                  
+                    if (!file_exists($imagen)) {
+                        $imagen = "img/no-photo.jpg";
+                    }
+                    ?>
+                    <!-- Comprueba si existe una imagen del producto o muestra una imagen por defecto -->
+                    <a href="detalles.php?id=<?php echo $row['id']; ?>&token=<?php echo hash_hmac('sha256', $row['id'], KEY_TOKEN); ?>">
+                        <img src="<?php echo $imagen; ?>">
+                    </a>
+                    <!-- Muestra la imagen del producto en un enlace -->
                     <div class="button-group">
                         <span><i class="fa-regular fa-eye"></i></span>
                         <span><i class="fa-regular fa-heart"></i></span>
@@ -77,20 +75,25 @@ $total_paginas = ceil($total_resultados / $resultados_por_pagina);
                     </div>
                 </div>
                 <div class="content-card-product">
-                    <p class="price">RD$<?php echo number_format($row['precio'], 2, '.',','); ?></p> 
-                    <a href="detalles.php?id=<?php echo $row['id']; ?>&token=<?php echo hash_hmac('sha256', $row['id'], KEY_TOKEN); ?>"><h3><?php echo $row['nombre']; ?></h3> </a> 
+                    <p class="price">RD$<?php echo number_format($row['precio'], 2, '.', ','); ?></p>
+                    <!-- Muestra el precio del producto con formato -->
+                    <a href="detalles.php?id=<?php echo $row['id']; ?>&token=<?php echo hash_hmac('sha256', $row['id'], KEY_TOKEN); ?>">
+                        <h3><?php echo $row['nombre']; ?></h3>
+                    </a>
+                    <!-- Muestra el nombre del producto como un enlace al detalle del producto -->
                     <button class="btn-add-to-cart" type="button" onclick="addProducto(<?php echo $row['id']; ?>,
                      '<?php echo hash_hmac('sha256', $row['id'], KEY_TOKEN);  ?>')">Añadir al carrito</button>
-                   
-                </div> 
-                
+                    <!-- Agrega un botón para añadir el producto al carrito -->
+                </div>
             </div>
         </div>
-        <?php }?>
+        <?php } ?>
+        <!-- Termina el bucle que genera las tarjetas de productos -->
+    </div>
 </section>
 
+
 <!--Mostrar la paginación-->
-<!-- Mostrar la paginación -->
 <section class="paginacion">
     <ul>
         <?php

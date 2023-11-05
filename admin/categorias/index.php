@@ -6,22 +6,23 @@ require '../config/config.php';
 
 // Verifica si el usuario está autenticado
 if (!isset($_SESSION['user_type'])){
-   header('Location: ../index.php');
+   header('Location: ../index.php'); // Redirige al inicio si el usuario no está autenticado
    exit;
 }
 
 // Verifica si el usuario es de tipo 'admin'
 if ($_SESSION['user_type'] != 'admin'){
-    header('Location: ../../index.php');
+    header('Location: ../../index.php'); // Redirige al inicio principal si el usuario no es un administrador
     exit;
- }
+}
 
-$db = new Database();
-$con = $db->conectar();
+$db = new Database(); // Crea una instancia de la clase Database
+$con = $db->conectar(); // Establece una conexión a la base de datos
 
-$sql = "SELECT id, nombre FROM categoria WHERE activo = 1";
-$resultado = $con->query($sql);
-$categorias = $resultado->fetchAll(PDO::FETCH_ASSOC);
+$sql = "SELECT id, nombre FROM categoria WHERE activo = 1"; // Consulta SQL para seleccionar categorías activas
+$resultado = $con->query($sql); // Ejecuta la consulta SQL
+$categorias = $resultado->fetchAll(PDO::FETCH_ASSOC); // Obtiene un array asociativo con los resultados
+
 
 ?>
 
