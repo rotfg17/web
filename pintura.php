@@ -34,6 +34,8 @@ $total_resultados = $sql_count->fetchColumn();
 // Se calcula el número total de páginas necesario para mostrar todos los resultados.
 $total_paginas = ceil($total_resultados / $resultados_por_pagina);
 
+
+
 // Fin de la sección de código PHP.
 ?>
 

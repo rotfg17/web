@@ -16,7 +16,7 @@ $token = isset($_GET['token']) ? $_GET['token'] : '';
 
 // Se realiza una comprobación para asegurarse de que 'id' y 'token' no estén vacíos.
 if ($id == '' || $token == '')  {
-    echo 'Error al procesar la petición';
+    header("location: index.php");
     exit; // Se muestra un mensaje de error y se finaliza la ejecución del script si faltan parámetros.
 } else {
     // Se genera un token temporal basado en 'id' y se compara con el token proporcionado.
