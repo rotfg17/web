@@ -144,20 +144,36 @@ function login($usuario, $password, $con, $proceso)
                 $lista_carrito = array();
                 $Shopping_Cart = $con->prepare("SELECT user_id, product_id, units FROM `shopping_cart` WHERE user_id = $user_id ");
                 $Shopping_Cart->execute();
-                if ($lista_carrito[] = $Shopping_Cart->fetch(PDO::FETCH_ASSOC)) {
-                    foreach ($lista_carrito as $producto) {
+
+                while ($producto = $Shopping_Cart->fetch(PDO::FETCH_ASSOC)) {
+                    $lista_carrito[] = $producto;
+                }
+
+                foreach ($lista_carrito as $producto) {
+                    if (isset($_SESSION['carrito']['productos'][$producto["product_id"]])) {
+                        // Si el producto ya existe en el carrito, agrega las unidades a las existentes.
+                        $_SESSION['carrito']['productos'][$producto["product_id"]] += $producto["units"];
+                    } else {
+                        // Si no existe, simplemente agrega el producto con sus unidades.
                         $_SESSION['carrito']['productos'][$producto["product_id"]] = $producto["units"];
                     }
                 }
 
+
                 $wishlist = array();
                 $wish_list = $con->prepare("SELECT user_id, id_producto FROM `wish_list` WHERE user_id = $user_id ");
                 $wish_list->execute();
-                if ($wishlist[] = $wish_list->fetch(PDO::FETCH_ASSOC)) {
-                    foreach ($wishlist as $producto) {
+
+                while ($producto = $wish_list->fetch(PDO::FETCH_ASSOC)) {
+                    $wishlist[] = $producto;
+                }
+
+                foreach ($wishlist as $producto) {
+                    if (!isset($_SESSION['wishlist']['products'][$producto["id_producto"]])) {
                         $_SESSION['wishlist']['products'][$producto["id_producto"]] = $producto["id_producto"];
                     }
                 }
+
                 if ($proceso == 'pago') {
                     header("Location: checkout.php");
                 } else {

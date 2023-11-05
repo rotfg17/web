@@ -10,6 +10,7 @@ $db = new Database();
 // Se establece una conexión a la base de datos y se asigna a la variable $con.
 $con = $db->conectar();
 
+
 // Se recupera la lista de productos del carrito almacenada en la sesión, o se establece como nula si no existe.
 $productos = isset($_SESSION['carrito']['productos']) ? $_SESSION['carrito']['productos'] : null;
 
@@ -58,5 +59,3 @@ session_destroy();
 
 // Se redirige al usuario a la página de inicio.
 header("location: index.php");
-?>
-
