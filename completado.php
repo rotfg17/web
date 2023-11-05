@@ -31,7 +31,7 @@ if ($id_transaccion == '') {
         $sqlDet = $con->prepare("SELECT nombre, precio, cantidad FROM detalle_compra WHERE id_compra = ?");
         $sqlDet->execute([$idCompra]);
     } else {
-        $error = 'Error al comprobar la compra: No se encontró una compra válida con la clave (key) proporcionada.';
+        header('Location: index.php');
     }
 }
 ?>
