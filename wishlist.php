@@ -200,7 +200,7 @@ if ($productos != null) {
         }
     </script>
 
-    <!-- JavaScript para ocultar/mostrar el contenido -->
+    <!-- JavaScript para ocultar/mostrar el contenido 
     <script>
         // Obtén una referencia a los elementos relevantes
         var categoryToggle = document.getElementById("category-toggle");
@@ -214,7 +214,7 @@ if ($productos != null) {
                 content.style.display = "block";
             }
         });
-    </script>
+    </script>-->
 
     <script src="js/script.js"></script>
     <script src="js/index.js"></script>

@@ -113,6 +113,29 @@ if ($productos != null) {
 </div>
 </main>
 
+<!-- Inicio del contenedor del loader -->
+<div class="loader-wrapper" 
+id="loader"  style="
+    display: none;"
+>
+    <!-- Contenedor del elemento de carga (loader) -->
+    <div class="loader"></div>
+</div>
+<!-- Fin del contenedor del loader -->
+
+
+<script>
+    // Función para mostrar el loader
+    function showLoader() {
+        document.getElementById("loader").style.display = "block";
+    }
+
+    // Función para ocultar el loader
+    function hideLoader() {
+        document.getElementById("loader").style.display = "none";
+    }
+</script>
+
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
 <script src="https://www.paypal.com/sdk/js?client-id=<?php echo CLIENT_ID; ?>&currency=<?php echo CURRENCY;?>"></script>
@@ -146,6 +169,7 @@ if ($productos != null) {
             });
         },
         onApprove: function(data, actions) {
+            showLoader()
             let url = 'clases/captura.php'
             actions.order.capture().then(function(detalles) {
                 console.log(detalles)

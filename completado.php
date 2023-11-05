@@ -118,25 +118,7 @@ if ($id_transaccion == '') {
 
 
 
-<!-- Inicio del contenedor del loader -->
-<div class="loader-wrapper">
-    <!-- Contenedor del elemento de carga (loader) -->
-    <div class="loader"></div>
-</div>
-<!-- Fin del contenedor del loader -->
 
-
-<script>
-    // Función para mostrar el loader
-    function showLoader() {
-        document.getElementById("loader").style.display = "block";
-    }
-
-    // Función para ocultar el loader
-    function hideLoader() {
-        document.getElementById("loader").style.display = "none";
-    }
-</script>
 
     <script src="js/script.js"></script>
     <script src="js/randomize.js"></script>
