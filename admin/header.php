@@ -56,10 +56,37 @@
                                 Categorías
                             </a>
 
-                            <a class="nav-link" href="<?php echo ADMIN_URL;?>productos">
+                            <a class="nav-link collapsed" href="<?php echo ADMIN_URL;?>productos">
                                 <div class="sb-nav-link-icon"><i class="fa-brands fa-shopify"></i></div>
                                 Productos
                             </a>
+                            <a class="nav-link collapsed" href="" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
+                                <div class="sb-nav-link-icon"><i class="fa-brands fa-shopify"></i></div>
+                                Productos por categorías
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+                                    <a class="nav-link" href="<?php echo ADMIN_URL;?>prod_cate">Accesorios de baño</a>
+                                    <a class="nav-link" href="<?php echo ADMIN_URL;?>prod_cate"">Accesorios de pintura</a>
+                                    <a class="nav-link" href="password.html">Agregados</a>
+                                    <a class="nav-link" href="login.html">Cerrajería</a>
+                                    <a class="nav-link" href="register.html">Contrucción ligera</a>
+                                    <a class="nav-link" href="password.html">Ebanisteria</a>
+                                    <a class="nav-link" href="login.html">Electricidad</a>
+                                    <a class="nav-link" href="register.html">Herramientas</a>
+                                    <a class="nav-link" href="password.html">Herreria</a>
+                                    <a class="nav-link" href="login.html">Jardineria</a>
+                                    <a class="nav-link" href="register.html">Madera</a>
+                                    <a class="nav-link" href="password.html">Pintura</a>
+                                    <a class="nav-link" href="login.html">Pinturas king</a>
+                                    <a class="nav-link" href="register.html">Plomeria</a>
+                                    <a class="nav-link" href="password.html">Productos generales</a>
+                                    <a class="nav-link" href="login.html">Quimicos</a>
+                                    <a class="nav-link" href="register.html">Refrigeración</a>
+                                    </a>
+                                </nav>
+                            </div>
 
                             <a class="nav-link" href="<?php echo ADMIN_URL;?>clientes">
                                 <div class="sb-nav-link-icon"><i class="fa-solid fa-headset"></i></div>
