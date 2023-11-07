@@ -67,7 +67,7 @@
                             </a>
                             <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
                                 <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
-                                    <a class="nav-link" href="<?php echo ADMIN_URL;?>prod_cate">Accesorios de baño</a>
+                                    <a class="nav-link" href="<?php echo ADMIN_URL;?>acce_bano">Accesorios de baño</a>
                                     <a class="nav-link" href="<?php echo ADMIN_URL;?>prod_cate"">Accesorios de pintura</a>
                                     <a class="nav-link" href="password.html">Agregados</a>
                                     <a class="nav-link" href="login.html">Cerrajería</a>
