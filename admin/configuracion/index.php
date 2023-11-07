@@ -86,3 +86,4 @@ foreach($datos as $dato){
 </main>
 
 <?php include '../footer.php';
+

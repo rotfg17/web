@@ -33,3 +33,4 @@ $sql->execute([$password, 'correo_password']);
     </div>
 </main>
 
+<?php include '../footer.php';
