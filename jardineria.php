@@ -1,10 +1,28 @@
-<?php 
+<?php
+require 'php/config.php'; // Incluye un archivo de configuración (no proporcionado en el código)
 
-require 'php/config.php';
+$db = new Database(); // Crea una instancia de la clase Database para gestionar la conexión a la base de datos
+$con = $db->conectar(); // Establece una conexión a la base de datos
 
-$db = new Database();
-$con = $db->conectar();
+// Parámetros de paginación
+$pagina_actual = isset($_GET['pagina']) ? intval($_GET['pagina']) : 1; // Obtiene el número de página actual
+$resultados_por_pagina = 15; // Define el número de resultados por página
+$offset = ($pagina_actual - 1) * $resultados_por_pagina; // Calcula el valor de desplazamiento (offset)
 
+// Consulta SQL con paginación
+$sql = $con->prepare("SELECT id, nombre, precio FROM productos WHERE id_categoria = 10 LIMIT :offset, :resultados_por_pagina");
+$sql->bindParam(':offset', $offset, PDO::PARAM_INT); // Asocia el valor de offset como un parámetro entero
+$sql->bindParam(':resultados_por_pagina', $resultados_por_pagina, PDO::PARAM_INT); // Asocia el valor de resultados_por_pagina como un parámetro entero
+$sql->execute(); // Ejecuta la consulta SQL
+$resultado = $sql->fetchAll(PDO::FETCH_ASSOC); // Obtiene los resultados de la consulta en un arreglo asociativo
+
+// Contar el número total de resultados
+$sql_count = $con->prepare("SELECT COUNT(*) AS total FROM productos WHERE id_categoria = 10");
+$sql_count->execute(); // Ejecuta una consulta para contar el número total de resultados
+$total_resultados = $sql_count->fetchColumn(); // Obtiene el número total de resultados
+
+// Calcular el número total de páginas
+$total_paginas = ceil($total_resultados / $resultados_por_pagina); // Calcula el número total de páginas necesarias para la paginación
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -26,275 +44,74 @@ $con = $db->conectar();
 <?php include 'menu.php'; ?>
 
    <div class="banner-especial -1r">
-   <a href="http://www.pinturastropical.com.do/site/?page_id=165" target="_blank"><img class="img-responsive vdk" src="img/jardineria.png" alt="Pintura" width="100%" height="auto" ></a> 
+   <img class="img-responsive vdk" src="img/jardineria.png" alt="jardineria" width="100%" height="auto" ></a> 
     </div>
-   <section class="product02"> 
+
+   <section class="product02">
     <div class="container-products" id="product-container">
+        <?php foreach ($resultado as $row) { ?>
+        <!-- Comienza un bucle para recorrer un array de resultados almacenados en $resultado. -->
         <div class="product-card">
             <div class="card-product">
                 <div class="container-img">
-                  <a href="acople.html"> <img src="img/alambrepua.jpg" alt="Alambre D/Puas Kinnox 250mts"></a>
-                    <div class="button-group">
-                        <span><i class="fa-regular fa-eye"></i></span>
-                        <span><i class="fa-regular fa-heart"></i></span>
-                        <span><i class="fa-solid fa-code-compare"></i></span>
-                    </div>
+                    <?php
+                    // Se extrae el 'id' del producto y se forma la ruta de la imagen principal.
+                    $id = $row['id'];
+                    $imagen = "img/productos/" . $id . "/principal";
+
+                    // Se define una lista de extensiones de archivo permitidas.
+                    $extensiones_permitidas = ['jpg', 'jpeg', 'png', 'webp'];
+
+                    // Se busca una imagen válida en los formatos permitidos.
+                    foreach ($extensiones_permitidas as $extension) {
+                        $imagen_con_extension = $imagen . '.' . $extension;
+                        if (file_exists($imagen_con_extension)) {
+                            $imagen = $imagen_con_extension;
+                            break; // Sale del bucle si se encontró una imagen válida.
+                        }
+                    }
+
+                    // Si no se encuentra una imagen válida, se establece una imagen de respaldo.
+                    if (!file_exists($imagen)) {
+                        $imagen = "img/no-photo.jpg";
+                    }
+                    ?>
+                    <!-- Se muestra la imagen del producto con un enlace a la página de detalles. -->
+                    <a href="detalles.php?id=<?php echo $row['id']; ?>&token=<?php echo hash_hmac('sha256', $row['id'], KEY_TOKEN); ?>">
+                        <img src="<?php echo $imagen; ?>">
+                    </a>
                 </div>
                 <div class="content-card-product">
-                    <p class="price">RD$ 2,091.71</p>
-                   <a href="acople.html"><h3>Alambre D/Puas Kinnox 250mts</h3> </a> 
-                    <span class="add-cart"><a href="#">Agregar al carro</a></span>
-                
+                    <!-- Se muestra el precio del producto formateado como moneda. -->
+                    <p class="price">RD$<?php echo number_format($row['precio'], 2, '.', ','); ?></p>
+                    <!-- Se muestra el nombre del producto con un enlace a la página de detalles. -->
+                    <a href="detalles.php?id=<?php echo $row['id']; ?>&token=<?php echo hash_hmac('sha256', $row['id'], KEY_TOKEN); ?>">
+                        <h3><?php echo $row['nombre']; ?></h3>
+                    </a>
+                    <!-- Botón para añadir el producto al carrito con llamada a una función JavaScript. -->
+                    <button class="btn-add-to-cart" type="button" onclick="addProducto(<?php echo $row['id']; ?>, 1, '<?php echo hash_hmac('sha256', $row['id'], KEY_TOKEN); ?>')">Añadir al carrito</button>
+                    <!-- Código para agregar el producto a la lista de deseos con llamada a una función JavaScript. -->
+                    <div class="btnAddDeseo" prod="<?php echo $row['id']; ?>">
+                        <button class="btn-add-to-cart" type="button" onclick="addProductToWishList(<?php echo $row['id']; ?>, '<?php echo hash_hmac('sha256', $row['id'], KEY_TOKEN); ?>')">Añadir a favorito</button>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="product-card">
-            <div class="card-product">
-                <div class="container-img">
-                    <a href="rotomartillo.html"><img src="img/aspersor3b.jpg" alt="Aspersor Best Value 3 Brazos"></a>
-                    <div class="button-group">
-                        <span><i class="fa-regular fa-eye"></i></span>
-                        <span><i class="fa-regular fa-heart"></i></span>
-                        <span><i class="fa-solid fa-code-compare"></i></span>
-                    </div>
-                </div>
-                <div class="content-card-product">
-                    <p class="price">RD$ 238.40</p>
-                    <a href="rotomartillo.html"> <h3>Aspersor Best Value 3 Brazos</h3></a>
-                    <span class="add-cart"><a href="#">Agregar al carro</a></span>
-                </div>
-            </div>
-        </div>
-        <div class="product-card">
-            <div class="card-product">
-                <div class="container-img">
-                    <a href="magnetic.html"><img src="img/aspersormetalico.jpg" alt="Aspersor Metalico Santul"></a>
-                    <div class="button-group">
-                        <span><i class="fa-regular fa-eye"></i></span>
-                        <span><i class="fa-regular fa-heart"></i></span>
-                        <span><i class="fa-solid fa-code-compare"></i></span>
-                    </div>
-                </div>
-                <div class="content-card-product">
-                    <p class="price">RD$ 539.49</p>
-                    <a href="magnetic.html"> <h3>Aspersor Metalico Santul</h3></a>
-                    <span class="add-cart"><a href="#">Agregar al carro</a></span>
-                </div>
-            </div>
-        </div>
-        <div class="product-card">
-            <div class="card-product">
-                <div class="container-img">
-                    <a href="universal.html"><img src="img/aspersorplastico.jpg" alt="Aspersor Plastico Santul"></a>
-                   
-                    <div class="button-group">
-                        <span><i class="fa-regular fa-eye"></i></span>
-                        <span><i class="fa-regular fa-heart"></i></span>
-                        <span><i class="fa-solid fa-code-compare"></i></span>
-                    </div>
-                </div>
-                <div class="content-card-product">
-                    <p class="price">RD$ 324.29</p>
-                    <a href="universal.html"><h3>Aspersor Plastico Santul</h3></a>
-                    <span class="add-cart"><a href="#">Agregar al carro</a></span>
-                </div>
-            </div>
-        </div>
-        <div class="product-card">
-            <div class="card-product">
-                <div class="container-img">
-                    <a href="cubomecanico.html"><img src="img/aspersornegro.jpg" alt="Aspersor Plastico V/Colores-Negro"></a>
-                    <div class="button-group">
-                        <span><i class="fa-regular fa-eye"></i></span>
-                        <span><i class="fa-regular fa-heart"></i></span>
-                        <span><i class="fa-solid fa-code-compare"></i></span>
-                    </div>
-                </div>
-                <div class="content-card-product">
-                    <p class="price">RD$ 38.83</p>
-                    <a href="cubomecanico.html"><h3>Aspersor Plastico V/Colores-Negro</h3></a>
-                    <span class="add-cart"><a href="#">Agregar al carro</a></span>
-                </div>
-            </div>
-        </div>
-        <div class="product-card">
-            <div class="card-product">
-                <div class="container-img">
-                    <a href="alicatecurvo.html"><img src="img/aspersorpretul.jpg" alt="Aspersor Pretul 20065 3 Brazos Plastico"></a>
-                    <div class="button-group">
-                        <span><i class="fa-regular fa-eye"></i></span>
-                        <span><i class="fa-regular fa-heart"></i></span>
-                        <span><i class="fa-solid fa-code-compare"></i></span>
-                    </div>
-                </div>
-                <div class="content-card-product">
-                    <p class="price">RD$ 182.00</p>
-                    <a href="alicatecurvo.html"><h3>Aspersor Pretul 20065 3 Brazos Plastico</h3></a>
-                    <span class="add-cart"><a href="#">Agregar al carro</a></span>
-                </div>
-            </div>
-        </div>
-        <div class="product-card">
-            <div class="card-product">
-                <div class="container-img">
-                    <a href="alicateirwin.html"><img src="img/aspersortruper.jpg" alt="Aspersor Truper C/Estaca Asp-11"></a>
-                    <div class="button-group">
-                        <span><i class="fa-regular fa-eye"></i></span>
-                        <span><i class="fa-regular fa-heart"></i></span>
-                        <span><i class="fa-solid fa-code-compare"></i></span>
-                    </div>
-                </div>
-                <div class="content-card-product">
-                    <p class="price">RD$ 653.89</p>
-                    <a href="alicateirwin.html"><h3>Aspersor Truper C/Estaca Asp-11</h3></a>
-                    <span class="add-cart"><a href="#">Agregar al carro</a></span>
-                </div>
-            </div>
-        </div>
-        <div class="product-card">
-            <div class="card-product">
-                <div class="container-img">
-                    <a href="pinzatruper.html"><img src="img/Vonder.webp" alt="Carretel Comp. P/Cortadora Vonder"></a>
-                    <div class="button-group">
-                        <span><i class="fa-regular fa-eye"></i></span>
-                        <span><i class="fa-regular fa-heart"></i></span>
-                        <span><i class="fa-solid fa-code-compare"></i></span>
-                    </div>
-                </div>
-                <div class="content-card-product">
-                    <p class="price">RD$ 904.79<span></p>
-                    <a href="pinzatruper.html"><h3>Carretel Comp. P/Cortadora Vonder</h3></a>
-                    <span class="add-cart"><a href="#">Agregar al carro</a></span>
-                </div>
-            </div>
-        </div>
-        <div class="product-card">
-            <div class="card-product">
-                <div class="container-img">
-                    <a href="alicatevikingo.html"> <img src="img/carretillaroja.jpg" alt="Carretilla Truper Roja Aire 6 G/Solido"></a>
-                    <div class="button-group">
-                        <span><i class="fa-regular fa-eye"></i></span>
-                        <span><i class="fa-regular fa-heart"></i></span>
-                        <span><i class="fa-solid fa-code-compare"></i></span>
-                    </div>
-                </div>
-                <div class="content-card-product">
-                    <p class="price">RD$ 7,590.00</p>
-                    <a href="alicatevikingo.html"><h3>Carretilla Truper Roja Aire "6" G/Solido</h3></a>
-                    <span class="add-cart"><a href="#">Agregar al carro</a></span>
-                </div>
-            </div>
-        </div>
-        <div class="product-card">
-            <div class="card-product">
-                <div class="container-img">
-                    <a href="electruper.html"><img src="img/cavadoracoa.png" alt="Cavadora (Coa Doble) Vikingo C/Mango"></a>
-                    <div class="button-group">
-                        <span><i class="fa-regular fa-eye"></i></span>
-                        <span><i class="fa-regular fa-heart"></i></span>
-                        <span><i class="fa-solid fa-code-compare"></i></span>
-                    </div>
-                </div>
-                <div class="content-card-product">
-                    <p class="price">RD$ 1,262.43</p>
-                    <a href="electruper.html"><h3>Cavadora (Coa Doble) Vikingo C/Mango</h3></a>
-                    <span class="add-cart"><a href="#">Agregar al carro</a></span>
-                </div>
-            </div>
-        </div>
-        <div class="product-card">
-            <div class="card-product">
-                <div class="container-img">
-                    <a href="conforttruper.html"><img src="img/coabellota.jpg" alt="Coa Bellota 5651-E"></a>
-                    <div class="button-group">
-                        <span><i class="fa-regular fa-eye"></i></span>
-                        <span><i class="fa-regular fa-heart"></i></span>
-                        <span><i class="fa-solid fa-code-compare"></i></span>
-                    </div>
-                </div>
-                <div class="content-card-product">
-                    <p class="price">RD$ 737.36</p>
-                    <a href="conforttruper.html"><h3>Coa Bellota 5651-E</h3></a>
-                    <span class="add-cart"><a href="#">Agregar al carro</a></span>
-                </div>
-            </div>
-        </div>
-        <div class="product-card">
-            <div class="card-product">
-                <div class="container-img">
-                    <a href="alicatepretul.html"><img src="img/escobavonder22.jpg" alt="Escoba Plast D/Jardin Vonder 22 Dientes"></a>
-                    <div class="button-group">
-                        <span><i class="fa-regular fa-eye"></i></span>
-                        <span><i class="fa-regular fa-heart"></i></span>
-                        <span><i class="fa-solid fa-code-compare"></i></span>
-                    </div>
-                </div>
-                <div class="content-card-product">
-                    <p class="price">RD$ 485.54</p>
-                    <a href="alicatepretul.html"><h3>Escoba Plast D/Jardin Vonder 22 Dientes</h3></a>
-                    <span class="add-cart"><a href="#">Agregar al carro</a></span>
-                </div>
-            </div>
-        </div>
-        <div class="product-card">
-            <div class="card-product">
-                <div class="container-img">
-                    <a href="alicatepretul.html"><img src="img/escobavonder26.jpg" alt="Escoba Plast D/Jardin Vonder 26 Dientes"></a>
-                    <div class="button-group">
-                        <span><i class="fa-regular fa-eye"></i></span>
-                        <span><i class="fa-regular fa-heart"></i></span>
-                        <span><i class="fa-solid fa-code-compare"></i></span>
-                    </div>
-                </div>
-                <div class="content-card-product">
-                    <p class="price">RD$ 713.70</p>
-                    <a href="alicatepretul.html"><h3>Escoba Plast D/Jardin Vonder 26 Dientes</h3></a>
-                    <span class="add-cart"><a href="#">Agregar al carro</a></span>
-                </div>
-            </div>
-        </div>
-        <div class="product-card">
-            <div class="card-product">
-                <div class="container-img">
-                    <a href="alicatepretul.html"><img src="img/escoba-metalica.jpg" alt="Escoba Truper P/Jardin Metal C/M Em-22"></a>
-                    <div class="button-group">
-                        <span><i class="fa-regular fa-eye"></i></span>
-                        <span><i class="fa-regular fa-heart"></i></span>
-                        <span><i class="fa-solid fa-code-compare"></i></span>
-                    </div>
-                </div>
-                <div class="content-card-product">
-                    <p class="price">RD$ 301.60</p>
-                    <a href="alicatepretul.html"><h3>Escoba Truper P/Jardin Metal C/M Em-22</h3></a>
-                    <span class="add-cart"><a href="#">Agregar al carro</a></span>
-                </div>
-            </div>
-        </div>
-        <div class="product-card">
-            <div class="card-product">
-                <div class="container-img">
-                    <a href="alicatepretul.html"><img src="img/escoba-metalica.jpg" alt="Escoba Truper P/Jardin Plast C/Mango"></a>
-                    <div class="button-group">
-                        <span><i class="fa-regular fa-eye"></i></span>
-                        <span><i class="fa-regular fa-heart"></i></span>
-                        <span><i class="fa-solid fa-code-compare"></i></span>
-                    </div>
-                </div>
-                <div class="content-card-product">
-                    <p class="price">RD$ 331.50</p>
-                    <a href="alicatepretul.html"><h3>Escoba Truper P/Jardin Plast C/Mango</h3></a>
-                    <span class="add-cart"><a href="#">Agregar al carro</a></span>
-                </div>
-            </div>
-        </div>
+        <!-- Finaliza el bucle que recorre los productos en $resultado. -->
+        <?php } ?>
+    </div>
 </section>
-   <section class="paginacion">
+
+<!--Mostrar la paginación-->
+<section class="paginacion">
     <ul>
-        <li><a href="jardineria.html" class="active">1</a></li>
-        <li><a href="jardineriapag2.html">2</a></li>
-        <li><a href="jardineriapag3.html">3</a></li>
-        <li><a href="jardineriapag4.html">4</a></li>
-        
+        <?php
+        for ($i = 1; $i <= $total_paginas; $i++) {
+            // Agregar la clase "active" al enlace de la página actual
+            $claseActiva = ($i == $pagina_actual) ? 'active' : '';
+            echo "<li><a href='jardineria.php?pagina=$i' class='$claseActiva'>$i</a></li>";
+        }
+        ?>
     </ul>
 </section>
 

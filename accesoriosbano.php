@@ -37,7 +37,7 @@ $total_paginas = ceil($total_resultados / $resultados_por_pagina); // Calcula el
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="css/css.css">
-        <title>Ferre Seibo - Pintura</title>
+        <title>Ferre Seibo - Accesorios de baño</title>
     </head>
 <body>
    
@@ -45,53 +45,63 @@ $total_paginas = ceil($total_resultados / $resultados_por_pagina); // Calcula el
     <?php  include 'menu.php'; ?>
 
    <div class="banner-especial -1r">
-   <a href="http://www.pinturastropical.com.do/site/?page_id=165" target="_blank"><img class="img-responsive vdk" src="img/PINTURA.png" alt="Pintura" width="100%" height="auto" ></a> 
+   <img class="img-responsive vdk" src="img/bano.png" alt="Pintura" width="100%" height="auto" >
     </div>
 
     <section class="product02">
     <div class="container-products" id="product-container">
         <?php foreach ($resultado as $row) { ?>
-        <!-- Comienza un bucle para recorrer los resultados de productos -->
+        <!-- Comienza un bucle para recorrer un array de resultados almacenados en $resultado. -->
         <div class="product-card">
             <div class="card-product">
                 <div class="container-img">
                     <?php
+                    // Se extrae el 'id' del producto y se forma la ruta de la imagen principal.
                     $id = $row['id'];
-                    $imagen = "img/productos/" . $id . "/principal.jpg";
+                    $imagen = "img/productos/" . $id . "/principal";
 
+                    // Se define una lista de extensiones de archivo permitidas.
+                    $extensiones_permitidas = ['jpg', 'jpeg', 'png', 'webp'];
+
+                    // Se busca una imagen válida en los formatos permitidos.
+                    foreach ($extensiones_permitidas as $extension) {
+                        $imagen_con_extension = $imagen . '.' . $extension;
+                        if (file_exists($imagen_con_extension)) {
+                            $imagen = $imagen_con_extension;
+                            break; // Sale del bucle si se encontró una imagen válida.
+                        }
+                    }
+
+                    // Si no se encuentra una imagen válida, se establece una imagen de respaldo.
                     if (!file_exists($imagen)) {
                         $imagen = "img/no-photo.jpg";
                     }
                     ?>
-                    <!-- Comprueba si existe una imagen del producto o muestra una imagen por defecto -->
+                    <!-- Se muestra la imagen del producto con un enlace a la página de detalles. -->
                     <a href="detalles.php?id=<?php echo $row['id']; ?>&token=<?php echo hash_hmac('sha256', $row['id'], KEY_TOKEN); ?>">
                         <img src="<?php echo $imagen; ?>">
                     </a>
-                    <!-- Muestra la imagen del producto en un enlace -->
-                    <div class="button-group">
-                        <span><i class="fa-regular fa-eye"></i></span>
-                        <span><i class="fa-regular fa-heart"></i></span>
-                        <span><i class="fa-solid fa-code-compare"></i></span>
-                    </div>
                 </div>
                 <div class="content-card-product">
+                    <!-- Se muestra el precio del producto formateado como moneda. -->
                     <p class="price">RD$<?php echo number_format($row['precio'], 2, '.', ','); ?></p>
-                    <!-- Muestra el precio del producto con formato -->
+                    <!-- Se muestra el nombre del producto con un enlace a la página de detalles. -->
                     <a href="detalles.php?id=<?php echo $row['id']; ?>&token=<?php echo hash_hmac('sha256', $row['id'], KEY_TOKEN); ?>">
                         <h3><?php echo $row['nombre']; ?></h3>
                     </a>
-                    <!-- Muestra el nombre del producto como un enlace al detalle del producto -->
-                    <button class="btn-add-to-cart" type="button" onclick="addProducto(<?php echo $row['id']; ?>,
-                     '<?php echo hash_hmac('sha256', $row['id'], KEY_TOKEN);  ?>')">Añadir al carrito</button>
-                    <!-- Agrega un botón para añadir el producto al carrito -->
+                    <!-- Botón para añadir el producto al carrito con llamada a una función JavaScript. -->
+                    <button class="btn-add-to-cart" type="button" onclick="addProducto(<?php echo $row['id']; ?>, 1, '<?php echo hash_hmac('sha256', $row['id'], KEY_TOKEN); ?>')">Añadir al carrito</button>
+                    <!-- Código para agregar el producto a la lista de deseos con llamada a una función JavaScript. -->
+                    <div class="btnAddDeseo" prod="<?php echo $row['id']; ?>">
+                        <button class="btn-add-to-cart" type="button" onclick="addProductToWishList(<?php echo $row['id']; ?>, '<?php echo hash_hmac('sha256', $row['id'], KEY_TOKEN); ?>')">Añadir a favorito</button>
+                    </div>
                 </div>
             </div>
         </div>
+        <!-- Finaliza el bucle que recorre los productos en $resultado. -->
         <?php } ?>
-        <!-- Termina el bucle que genera las tarjetas de productos -->
     </div>
 </section>
-
 
 <!--Mostrar la paginación-->
 <section class="paginacion">
@@ -100,7 +110,7 @@ $total_paginas = ceil($total_resultados / $resultados_por_pagina); // Calcula el
         for ($i = 1; $i <= $total_paginas; $i++) {
             // Agregar la clase "active" al enlace de la página actual
             $claseActiva = ($i == $pagina_actual) ? 'active' : '';
-            echo "<li><a href='pintura.php?pagina=$i' class='$claseActiva'>$i</a></li>";
+            echo "<li><a href='accesoriosbano.php?pagina=$i' class='$claseActiva'>$i</a></li>";
         }
         ?>
     </ul>

@@ -18,7 +18,7 @@ $sql->execute();
 $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
 
 // Contar el número total de resultados
-$sql_count = $con->prepare("SELECT COUNT(*) AS total FROM productos WHERE id_categoria = 12");
+$sql_count = $con->prepare("SELECT COUNT(*) AS total FROM productos WHERE id_categoria = 13");
 $sql_count->execute();
 $total_resultados = $sql_count->fetchColumn();
 
@@ -41,14 +41,14 @@ $total_paginas = ceil($total_resultados / $resultados_por_pagina);
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
         
         <link rel="stylesheet" href="css/css.css">
-        <title>Ferre Seibo - Pintura</title>
+        <title>Ferre Seibo - Pinturas King</title>
     </head>
 <body>
 
 <?php include 'menu.php'; ?> 
 
    <div class="banner-especial -1r">
-   <a href="http://www.pinturastropical.com.do/site/?page_id=165" target="_blank"><img class="img-responsive vdk" src="img/PINTURA.png" alt="Pintura" width="100%" height="auto" ></a> 
+   <a href="https://pinturasking.com.do/linea-proyecto/" target="_blank"><img class="img-responsive vdk" src="img/PINTURA.png" alt="Pintura" width="100%" height="auto" ></a> 
     </div>
     <section class="product02"> 
     <div class="container-products" id="product-container">
@@ -105,7 +105,7 @@ $total_paginas = ceil($total_resultados / $resultados_por_pagina);
         for ($i = 1; $i <= $total_paginas; $i++) {
             // Agregar la clase "active" al enlace de la página actual
             $claseActiva = ($i == $pagina_actual) ? 'active' : '';
-            echo "<li><a href='pintura.php?pagina=$i' class='$claseActiva'>$i</a></li>";
+            echo "<li><a href='pinturasking.php?pagina=$i' class='$claseActiva'>$i</a></li>";
         }
         ?>
     </ul>

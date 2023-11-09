@@ -1,10 +1,28 @@
-<?php 
+<?php
+require 'php/config.php'; // Incluye un archivo de configuración (no proporcionado en el código)
 
-require 'php/config.php';
+$db = new Database(); // Crea una instancia de la clase Database para gestionar la conexión a la base de datos
+$con = $db->conectar(); // Establece una conexión a la base de datos
 
-$db = new Database();
-$con = $db->conectar();
+// Parámetros de paginación
+$pagina_actual = isset($_GET['pagina']) ? intval($_GET['pagina']) : 1; // Obtiene el número de página actual
+$resultados_por_pagina = 15; // Define el número de resultados por página
+$offset = ($pagina_actual - 1) * $resultados_por_pagina; // Calcula el valor de desplazamiento (offset)
 
+// Consulta SQL con paginación
+$sql = $con->prepare("SELECT id, nombre, precio FROM productos WHERE id_categoria = 6 LIMIT :offset, :resultados_por_pagina");
+$sql->bindParam(':offset', $offset, PDO::PARAM_INT); // Asocia el valor de offset como un parámetro entero
+$sql->bindParam(':resultados_por_pagina', $resultados_por_pagina, PDO::PARAM_INT); // Asocia el valor de resultados_por_pagina como un parámetro entero
+$sql->execute(); // Ejecuta la consulta SQL
+$resultado = $sql->fetchAll(PDO::FETCH_ASSOC); // Obtiene los resultados de la consulta en un arreglo asociativo
+
+// Contar el número total de resultados
+$sql_count = $con->prepare("SELECT COUNT(*) AS total FROM productos WHERE id_categoria = 6");
+$sql_count->execute(); // Ejecuta una consulta para contar el número total de resultados
+$total_resultados = $sql_count->fetchColumn(); // Obtiene el número total de resultados
+
+// Calcular el número total de páginas
+$total_paginas = ceil($total_resultados / $resultados_por_pagina); // Calcula el número total de páginas necesarias para la paginación
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -20,282 +38,81 @@ $con = $db->conectar();
         
         <link rel="stylesheet" href="css/css.css">
 
-        <title>Ferre Seibo - Agregados</title>
+        <title>Ferre Seibo - Ebanistería</title>
     </head>
 <body>
     
 <?php include 'menu.php'; ?>
 
    <div class="banner-especial -1r">
-   <a href="http://www.pinturastropical.com.do/site/?page_id=165" target="_blank"><img class="img-responsive vdk" src="img/Ebanistería.png" alt="Pintura" width="100%" height="auto" ></a> 
+   <img class="img-responsive vdk" src="img/Ebanistería.png" alt="Pintura" width="100%" height="auto" >
     </div>
-   <section class="product02"> 
+
+      <section class="product02">
     <div class="container-products" id="product-container">
+        <?php foreach ($resultado as $row) { ?>
+        <!-- Comienza un bucle para recorrer un array de resultados almacenados en $resultado. -->
         <div class="product-card">
             <div class="card-product">
                 <div class="container-img">
-                  <a href="acople.html"> <img src="img/barnizcaoba1-4.png" alt="Barniz Natural Gl Tropical"></a>
-                    <div class="button-group">
-                        <span><i class="fa-regular fa-eye"></i></span>
-                        <span><i class="fa-regular fa-heart"></i></span>
-                        <span><i class="fa-solid fa-code-compare"></i></span>
-                    </div>
+                    <?php
+                    // Se extrae el 'id' del producto y se forma la ruta de la imagen principal.
+                    $id = $row['id'];
+                    $imagen = "img/productos/" . $id . "/principal";
+
+                    // Se define una lista de extensiones de archivo permitidas.
+                    $extensiones_permitidas = ['jpg', 'jpeg', 'png', 'webp'];
+
+                    // Se busca una imagen válida en los formatos permitidos.
+                    foreach ($extensiones_permitidas as $extension) {
+                        $imagen_con_extension = $imagen . '.' . $extension;
+                        if (file_exists($imagen_con_extension)) {
+                            $imagen = $imagen_con_extension;
+                            break; // Sale del bucle si se encontró una imagen válida.
+                        }
+                    }
+
+                    // Si no se encuentra una imagen válida, se establece una imagen de respaldo.
+                    if (!file_exists($imagen)) {
+                        $imagen = "img/no-photo.jpg";
+                    }
+                    ?>
+                    <!-- Se muestra la imagen del producto con un enlace a la página de detalles. -->
+                    <a href="detalles.php?id=<?php echo $row['id']; ?>&token=<?php echo hash_hmac('sha256', $row['id'], KEY_TOKEN); ?>">
+                        <img src="<?php echo $imagen; ?>">
+                    </a>
                 </div>
                 <div class="content-card-product">
-                    <p class="price">RD$ 995.00</p>
-                   <a href="acople.html"><h3>Barniz Natural Gl Tropical</h3> </a> 
-                    <span class="add-cart"><a href="#">Agregar al carro</a></span>
-                
+                    <!-- Se muestra el precio del producto formateado como moneda. -->
+                    <p class="price">RD$<?php echo number_format($row['precio'], 2, '.', ','); ?></p>
+                    <!-- Se muestra el nombre del producto con un enlace a la página de detalles. -->
+                    <a href="detalles.php?id=<?php echo $row['id']; ?>&token=<?php echo hash_hmac('sha256', $row['id'], KEY_TOKEN); ?>">
+                        <h3><?php echo $row['nombre']; ?></h3>
+                    </a>
+                    <!-- Botón para añadir el producto al carrito con llamada a una función JavaScript. -->
+                    <button class="btn-add-to-cart" type="button" onclick="addProducto(<?php echo $row['id']; ?>, 1, '<?php echo hash_hmac('sha256', $row['id'], KEY_TOKEN); ?>')">Añadir al carrito</button>
+                    <!-- Código para agregar el producto a la lista de deseos con llamada a una función JavaScript. -->
+                    <div class="btnAddDeseo" prod="<?php echo $row['id']; ?>">
+                        <button class="btn-add-to-cart" type="button" onclick="addProductToWishList(<?php echo $row['id']; ?>, '<?php echo hash_hmac('sha256', $row['id'], KEY_TOKEN); ?>')">Añadir a favorito</button>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="product-card">
-            <div class="card-product">
-                <div class="container-img">
-                    <a href="rotomartillo.html"><img src="img/Tubular.PNG" alt="Cerradura Tubular Negro New Prof Np-2030 Np-230"></a>
-                    <div class="button-group">
-                        <span><i class="fa-regular fa-eye"></i></span>
-                        <span><i class="fa-regular fa-heart"></i></span>
-                        <span><i class="fa-solid fa-code-compare"></i></span>
-                    </div>
-                </div>
-                <div class="content-card-product">
-                    <p class="price">RD$ 500.50</p>
-                    <a href="rotomartillo.html"> <h3>Cerradura Tubular Negro New Prof Np-2030 Np-230</h3></a>
-                    <span class="add-cart"><a href="#">Agregar al carro</a></span>
-                </div>
-            </div>
-        </div>
-        <div class="product-card">
-            <div class="card-product">
-                <div class="container-img">
-                    <a href="magnetic.html"><img src="https://www.ochoa.com.do/media/product/IMG_97984.JPG" alt="Cola 8 Onz. Universal Poliuretano"></a>
-                    <div class="button-group">
-                        <span><i class="fa-regular fa-eye"></i></span>
-                        <span><i class="fa-regular fa-heart"></i></span>
-                        <span><i class="fa-solid fa-code-compare"></i></span>
-                    </div>
-                </div>
-                <div class="content-card-product">
-                    <p class="price">RD$ 413.88</p>
-                    <a href="magnetic.html"> <h3>Cola 8 Onz. Universal Poliuretano</h3></a>
-                    <span class="add-cart"><a href="#">Agregar al carro</a></span>
-                </div>
-            </div>
-        </div>
-        <div class="product-card">
-            <div class="card-product">
-                <div class="container-img">
-                    <a href="universal.html"><img src="https://fesa.do/wp-content/uploads/2022/04/item-145-1.jpg" alt="Cola Amar 1/2 Gl Univ A"></a>
-                   
-                    <div class="button-group">
-                        <span><i class="fa-regular fa-eye"></i></span>
-                        <span><i class="fa-regular fa-heart"></i></span>
-                        <span><i class="fa-solid fa-code-compare"></i></span>
-                    </div>
-                </div>
-                <div class="content-card-product">
-                    <p class="price">RD$ 708.70</p>
-                    <a href="universal.html"><h3>Cola Amar 1/2 Gl Univ A</h3></a>
-                    <span class="add-cart"><a href="#">Agregar al carro</a></span>
-                </div>
-            </div>
-        </div>
-        <div class="product-card">
-            <div class="card-product">
-                <div class="container-img">
-                    <a href="cubomecanico.html"><img src="https://martur.do/wp-content/uploads/2023/09/item-138-1-1-1-1-1-1.jpg" alt="Cola Amar 16 Onz Univ A"></a>
-                    <div class="button-group">
-                        <span><i class="fa-regular fa-eye"></i></span>
-                        <span><i class="fa-regular fa-heart"></i></span>
-                        <span><i class="fa-solid fa-code-compare"></i></span>
-                    </div>
-                </div>
-                <div class="content-card-product">
-                    <p class="price">RD$ 244.42</p>
-                    <a href="cubomecanico.html"><h3>Cola Amar 16 Onz Univ A</h3></a>
-                    <span class="add-cart"><a href="#">Agregar al carro</a></span>
-                </div>
-            </div>
-        </div>
-        <div class="product-card">
-            <div class="card-product">
-                <div class="container-img">
-                    <a href="alicatecurvo.html"><img src="https://martur.do/wp-content/uploads/2023/09/item-139-1-1-1-1-1-1.jpg" alt="Cola Amar 32 Onz Universal A"></a>
-                    <div class="button-group">
-                        <span><i class="fa-regular fa-eye"></i></span>
-                        <span><i class="fa-regular fa-heart"></i></span>
-                        <span><i class="fa-solid fa-code-compare"></i></span>
-                    </div>
-                </div>
-                <div class="content-card-product">
-                    <p class="price">RD$ 517.83</p>
-                    <a href="alicatecurvo.html"><h3>Cola Amar 32 Onz Universal A</h3></a>
-                    <span class="add-cart"><a href="#">Agregar al carro</a></span>
-                </div>
-            </div>
-        </div>
-        <div class="product-card">
-            <div class="card-product">
-                <div class="container-img">
-                    <a href="alicateirwin.html"><img src="https://martur.do/wp-content/uploads/2023/09/item-139-1-1-1-1-1-1.jpg" alt="Cola Amar 4 Onz Univ A"></a>
-                    <div class="button-group">
-                        <span><i class="fa-regular fa-eye"></i></span>
-                        <span><i class="fa-regular fa-heart"></i></span>
-                        <span><i class="fa-solid fa-code-compare"></i></span>
-                    </div>
-                </div>
-                <div class="content-card-product">
-                    <p class="price">RD$ 110.44</p>
-                    <a href="alicateirwin.html"><h3>Cola Amar 4 Onz Univ A</h3></a>
-                    <span class="add-cart"><a href="#">Agregar al carro</a></span>
-                </div>
-            </div>
-        </div>
-        <div class="product-card">
-            <div class="card-product">
-                <div class="container-img">
-                    <a href="pinzatruper.html"><img src="https://ferreteriacima.com.do/cdn/shop/products/718594050584_400x.jpg?v=1619101638" alt="Cola Amar 4 Onz Wa 505-8"></a>
-                    <div class="button-group">
-                        <span><i class="fa-regular fa-eye"></i></span>
-                        <span><i class="fa-regular fa-heart"></i></span>
-                        <span><i class="fa-solid fa-code-compare"></i></span>
-                    </div>
-                </div>
-                <div class="content-card-product">
-                    <p class="price">RD$ 111.05<span></p>
-                    <a href="pinzatruper.html"><h3>Cola Amar 4 Onz Wa 505-8</h3></a>
-                    <span class="add-cart"><a href="#">Agregar al carro</a></span>
-                </div>
-            </div>
-        </div>
-        <div class="product-card">
-            <div class="card-product">
-                <div class="container-img">
-                    <a href="alicatevikingo.html"> <img src="https://www.innovacentro.com.do/product/image/medium/003740_0.jpg" alt="Cola Amar 8 Onz Lanco Wa-505-7 A"></a>
-                    <div class="button-group">
-                        <span><i class="fa-regular fa-eye"></i></span>
-                        <span><i class="fa-regular fa-heart"></i></span>
-                        <span><i class="fa-solid fa-code-compare"></i></span>
-                    </div>
-                </div>
-                <div class="content-card-product">
-                    <p class="price">RD$ 177.33</p>
-                    <a href="alicatevikingo.html"><h3>Cola Amar 8 Onz Lanco Wa-505-7 A</h3></a>
-                    <span class="add-cart"><a href="#">Agregar al carro</a></span>
-                </div>
-            </div>
-        </div>
-        <div class="product-card">
-            <div class="card-product">
-                <div class="container-img">
-                    <a href="electruper.html"><img src="https://fesa.do/wp-content/uploads/2022/04/item-143-1.jpg" alt="Cola Amar 8 Onz Universal A"></a>
-                    <div class="button-group">
-                        <span><i class="fa-regular fa-eye"></i></span>
-                        <span><i class="fa-regular fa-heart"></i></span>
-                        <span><i class="fa-solid fa-code-compare"></i></span>
-                    </div>
-                </div>
-                <div class="content-card-product">
-                    <p class="price">RD$ 138.67</p>
-                    <a href="electruper.html"><h3>Cola Amar 8 Onz Universal A</h3></a>
-                    <span class="add-cart"><a href="#">Agregar al carro</a></span>
-                </div>
-            </div>
-        </div>
-        <div class="product-card">
-            <div class="card-product">
-                <div class="container-img">
-                    <a href="conforttruper.html"><img src="https://fesa.do/wp-content/uploads/2022/04/item-145-1.jpg" alt="Cola Amar Gl Univ A"></a>
-                    <div class="button-group">
-                        <span><i class="fa-regular fa-eye"></i></span>
-                        <span><i class="fa-regular fa-heart"></i></span>
-                        <span><i class="fa-solid fa-code-compare"></i></span>
-                    </div>
-                </div>
-                <div class="content-card-product">
-                    <p class="price">RD$ 1,282.42</p>
-                    <a href="conforttruper.html"><h3>Cola Amar Gl Univ A</h3></a>
-                    <span class="add-cart"><a href="#">Agregar al carro</a></span>
-                </div>
-            </div>
-        </div>
-        <div class="product-card">
-            <div class="card-product">
-                <div class="container-img">
-                    <a href="alicatepretul.html"><img src="https://assets-ferremix.tiendagoshop.com/rails/active_storage/representations/proxy/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBa0lyIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--55830c037055a82ae138de9021030cc75d6467c4/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdDem9MWm05eWJXRjBTU0lJY0c1bkJqb0dSVlE2QzNKbGMybDZaVWtpRERVME1IZzNOakFHT3daVU9nOWlZV05yWjNKdmRXNWtTU0lKYm05dVpRWTdCbFE2REdkeVlYWnBkSGxKSWd0alpXNTBaWElHT3daVU9ndGxlSFJsYm5SQUJ6b0pZM0p2Y0VraUVEVTBNSGczTmpBck1Dc3dCanNHVkE9PSIsImV4cCI6bnVsbCwicHVyIjoidmFyaWF0aW9uIn19--6acef44bd344055fd9c237e0ca7d42e2e7a58baf/Cola%20Universal%202.png" alt="Cola Amarilla Univ Detalle"></a>
-                    <div class="button-group">
-                        <span><i class="fa-regular fa-eye"></i></span>
-                        <span><i class="fa-regular fa-heart"></i></span>
-                        <span><i class="fa-solid fa-code-compare"></i></span>
-                    </div>
-                </div>
-                <div class="content-card-product">
-                    <p class="price">RD$ 66.26</p>
-                    <a href="alicatepretul.html"><h3>Cola Amarilla Univ Detalle</h3></a>
-                    <span class="add-cart"><a href="#">Agregar al carro</a></span>
-                </div>
-            </div>
-        </div>
-        <div class="product-card">
-            <div class="card-product">
-                <div class="container-img">
-                    <a href="alicatepretul.html"><img src="https://canoindustrial.com/canoind/wp-content/uploads/2020/11/cola-blanca-301-silbond-Cano.jpg" alt="Cola Blanca Silbond 301 32oz Fl"></a>
-                    <div class="button-group">
-                        <span><i class="fa-regular fa-eye"></i></span>
-                        <span><i class="fa-regular fa-heart"></i></span>
-                        <span><i class="fa-solid fa-code-compare"></i></span>
-                    </div>
-                </div>
-                <div class="content-card-product">
-                    <p class="price">RD$ 179.76</p>
-                    <a href="alicatepretul.html"><h3>Cola Blanca Silbond 301 32oz Fl</h3></a>
-                    <span class="add-cart"><a href="#">Agregar al carro</a></span>
-                </div>
-            </div>
-        </div>
-        <div class="product-card">
-            <div class="card-product">
-                <div class="container-img">
-                    <a href="alicatepretul.html"><img src="https://fontanasrl.odoo.com/web/image/product.product/18578/image_1024/%5B1720%5D%20CORREDERAS%20PUSH%20EXT%20TOTAL%20400MM%2016%27%27?unique=80882a3" alt="Corred Full Ext Push 16 New Prof"></a>
-                    <div class="button-group">
-                        <span><i class="fa-regular fa-eye"></i></span>
-                        <span><i class="fa-regular fa-heart"></i></span>
-                        <span><i class="fa-solid fa-code-compare"></i></span>
-                    </div>
-                </div>
-                <div class="content-card-product">
-                    <p class="price">RD$ 403.00</p>
-                    <a href="alicatepretul.html"><h3>Corred Full Ext Push 16" New Prof</h3></a>
-                    <span class="add-cart"><a href="#">Agregar al carro</a></span>
-                </div>
-            </div>
-        </div>
-        <div class="product-card">
-            <div class="card-product">
-                <div class="container-img">
-                    <a href="alicatepretul.html"><img src="https://assets-ferremix.tiendagoshop.com/rails/active_storage/representations/proxy/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBcm90IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--e87d2432609af4f71a71b61506a4411cdf3cbc42/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdDem9MWm05eWJXRjBTU0lJY0c1bkJqb0dSVlE2QzNKbGMybDZaVWtpRGpFd01EQjRNVEF3TUFZN0JsUTZER2R5WVhacGRIbEpJZ3RqWlc1MFpYSUdPd1pVT2d0bGVIUmxiblJBQnpvSlkzSnZjRWtpRWpFd01EQjRNVEF3TUNzd0t6QUdPd1pVT2c5aVlXTnJaM0p2ZFc1a1NTSUpibTl1WlFZN0JsUT0iLCJleHAiOm51bGwsInB1ciI6InZhcmlhdGlvbiJ9fQ==--1f7eadae8e3ddef12e0d4863530d14f5465df1ce/13339.png" alt="Corred Full Ext Push 18 New Prof"></a>
-                    <div class="button-group">
-                        <span><i class="fa-regular fa-eye"></i></span>
-                        <span><i class="fa-regular fa-heart"></i></span>
-                        <span><i class="fa-solid fa-code-compare"></i></span>
-                    </div>
-                </div>
-                <div class="content-card-product">
-                    <p class="price">RD$ 435.50</p>
-                    <a href="alicatepretul.html"><h3>Corred Full Ext Push 18" New Prof</h3></a>
-                    <span class="add-cart"><a href="#">Agregar al carro</a></span>
-                </div>
-            </div>
-        </div>
+        <!-- Finaliza el bucle que recorre los productos en $resultado. -->
+        <?php } ?>
+    </div>
 </section>
-   <section class="paginacion">
+
+   <!--Mostrar la paginación-->
+<section class="paginacion">
     <ul>
-        <li><a href="ebanisteria.html" class="active">1</a></li>
-        <li><a href="ebanisteriapag2.html">2</a></li>
-        <li><a href="ebanisteriapag3.html">3</a></li>
-        <li><a href="ebanisteriapag4.html">4</a></li>
-        
+        <?php
+        for ($i = 1; $i <= $total_paginas; $i++) {
+            // Agregar la clase "active" al enlace de la página actual
+            $claseActiva = ($i == $pagina_actual) ? 'active' : '';
+            echo "<li><a href='ebanisteria.php?pagina=$i' class='$claseActiva'>$i</a></li>";
+        }
+        ?>
     </ul>
 </section>
 

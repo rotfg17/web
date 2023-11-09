@@ -1,10 +1,28 @@
-<?php 
+<?php
+require 'php/config.php'; // Incluye un archivo de configuración (no proporcionado en el código)
 
-require 'php/config.php';
+$db = new Database(); // Crea una instancia de la clase Database para gestionar la conexión a la base de datos
+$con = $db->conectar(); // Establece una conexión a la base de datos
 
-$db = new Database();
-$con = $db->conectar();
+// Parámetros de paginación
+$pagina_actual = isset($_GET['pagina']) ? intval($_GET['pagina']) : 1; // Obtiene el número de página actual
+$resultados_por_pagina = 15; // Define el número de resultados por página
+$offset = ($pagina_actual - 1) * $resultados_por_pagina; // Calcula el valor de desplazamiento (offset)
 
+// Consulta SQL con paginación
+$sql = $con->prepare("SELECT id, nombre, precio FROM productos WHERE id_categoria = 8 LIMIT :offset, :resultados_por_pagina");
+$sql->bindParam(':offset', $offset, PDO::PARAM_INT); // Asocia el valor de offset como un parámetro entero
+$sql->bindParam(':resultados_por_pagina', $resultados_por_pagina, PDO::PARAM_INT); // Asocia el valor de resultados_por_pagina como un parámetro entero
+$sql->execute(); // Ejecuta la consulta SQL
+$resultado = $sql->fetchAll(PDO::FETCH_ASSOC); // Obtiene los resultados de la consulta en un arreglo asociativo
+
+// Contar el número total de resultados
+$sql_count = $con->prepare("SELECT COUNT(*) AS total FROM productos WHERE id_categoria = 8");
+$sql_count->execute(); // Ejecuta una consulta para contar el número total de resultados
+$total_resultados = $sql_count->fetchColumn(); // Obtiene el número total de resultados
+
+// Calcular el número total de páginas
+$total_paginas = ceil($total_resultados / $resultados_por_pagina); // Calcula el número total de páginas necesarias para la paginación
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -20,229 +38,82 @@ $con = $db->conectar();
         
         <link rel="stylesheet" href="css/css.css">
 
-        <title>Ferre Seibo - Agregados</title>
+        <title>Ferre Seibo - Herramientas</title>
     </head>
 <body>
     
 <?php include 'menu.php'; ?>
 
+<div class="banner-especial -1r">
+   <img class="img-responsive vdk" src="img/herramientas.png" alt="herramientas" width="100%" height="auto" >
+    </div>
 
-   <section class="product02"> 
+
+<section class="product02">
     <div class="container-products" id="product-container">
+        <?php foreach ($resultado as $row) { ?>
+        <!-- Comienza un bucle para recorrer un array de resultados almacenados en $resultado. -->
         <div class="product-card">
             <div class="card-product">
                 <div class="container-img">
-                  <a href="acople.html"> <img src="img/acople-27029.jpg" alt="acople"></a>
-                    <div class="button-group">
-                        <span><i class="fa-regular fa-eye"></i></span>
-                        <span><i class="fa-regular fa-heart"></i></span>
-                        <span><i class="fa-solid fa-code-compare"></i></span>
-                    </div>
+                    <?php
+                    // Se extrae el 'id' del producto y se forma la ruta de la imagen principal.
+                    $id = $row['id'];
+                    $imagen = "img/productos/" . $id . "/principal";
+
+                    // Se define una lista de extensiones de archivo permitidas.
+                    $extensiones_permitidas = ['jpg', 'jpeg', 'png', 'webp'];
+
+                    // Se busca una imagen válida en los formatos permitidos.
+                    foreach ($extensiones_permitidas as $extension) {
+                        $imagen_con_extension = $imagen . '.' . $extension;
+                        if (file_exists($imagen_con_extension)) {
+                            $imagen = $imagen_con_extension;
+                            break; // Sale del bucle si se encontró una imagen válida.
+                        }
+                    }
+
+                    // Si no se encuentra una imagen válida, se establece una imagen de respaldo.
+                    if (!file_exists($imagen)) {
+                        $imagen = "img/no-photo.jpg";
+                    }
+                    ?>
+                    <!-- Se muestra la imagen del producto con un enlace a la página de detalles. -->
+                    <a href="detalles.php?id=<?php echo $row['id']; ?>&token=<?php echo hash_hmac('sha256', $row['id'], KEY_TOKEN); ?>">
+                        <img src="<?php echo $imagen; ?>">
+                    </a>
                 </div>
                 <div class="content-card-product">
-                    <p class="price">RD$ 165.60</p>
-                   <a href="acople.html"><h3>ACOPLE RAPD. MACHO PETRUL "1/4" 27029</h3> </a> 
-                    <span class="add-cart"><a href="#">Agregar al carro</a></span>
-                
+                    <!-- Se muestra el precio del producto formateado como moneda. -->
+                    <p class="price">RD$<?php echo number_format($row['precio'], 2, '.', ','); ?></p>
+                    <!-- Se muestra el nombre del producto con un enlace a la página de detalles. -->
+                    <a href="detalles.php?id=<?php echo $row['id']; ?>&token=<?php echo hash_hmac('sha256', $row['id'], KEY_TOKEN); ?>">
+                        <h3><?php echo $row['nombre']; ?></h3>
+                    </a>
+                    <!-- Botón para añadir el producto al carrito con llamada a una función JavaScript. -->
+                    <button class="btn-add-to-cart" type="button" onclick="addProducto(<?php echo $row['id']; ?>, 1, '<?php echo hash_hmac('sha256', $row['id'], KEY_TOKEN); ?>')">Añadir al carrito</button>
+                    <!-- Código para agregar el producto a la lista de deseos con llamada a una función JavaScript. -->
+                    <div class="btnAddDeseo" prod="<?php echo $row['id']; ?>">
+                        <button class="btn-add-to-cart" type="button" onclick="addProductToWishList(<?php echo $row['id']; ?>, '<?php echo hash_hmac('sha256', $row['id'], KEY_TOKEN); ?>')">Añadir a favorito</button>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="product-card">
-            <div class="card-product">
-                <div class="container-img">
-                    <a href="rotomartillo.html"><img src="img/ROTOMARTILLO.webp" alt="rotomartillo"></a>
-                    <div class="button-group">
-                        <span><i class="fa-regular fa-eye"></i></span>
-                        <span><i class="fa-regular fa-heart"></i></span>
-                        <span><i class="fa-solid fa-code-compare"></i></span>
-                    </div>
-                </div>
-                <div class="content-card-product">
-                    <p class="price">RD$184.38</p>
-                    <a href="rotomartillo.html"> <h3>ADAPT P/ROTOMARTILLO HEX TOLSEN 1/4</h3></a>
-                    <span class="add-cart"><a href="#">Agregar al carro</a></span>
-                </div>
-            </div>
-        </div>
-        <div class="product-card">
-            <div class="card-product">
-                <div class="container-img">
-                    <a href="magnetic.html"><img src="img/AA.webp" alt="P/TALADRO"></a>
-                    <div class="button-group">
-                        <span><i class="fa-regular fa-eye"></i></span>
-                        <span><i class="fa-regular fa-heart"></i></span>
-                        <span><i class="fa-solid fa-code-compare"></i></span>
-                    </div>
-                </div>
-                <div class="content-card-product">
-                    <p class="price">RD$146.25</p>
-                    <a href="magnetic.html"> <h3> ADAPT P/TALADRO HEX TOLSEN 1/4</h3></a>
-                    <span class="add-cart"><a href="#">Agregar al carro</a></span>
-                </div>
-            </div>
-        </div>
-        <div class="product-card">
-            <div class="card-product">
-                <div class="container-img">
-                    <a href="universal.html"><img src="img/universaljoint2.jpg" alt="ADAPTADOR TOLSEN UNIVERSAL"></a>
-                   
-                    <div class="button-group">
-                        <span><i class="fa-regular fa-eye"></i></span>
-                        <span><i class="fa-regular fa-heart"></i></span>
-                        <span><i class="fa-solid fa-code-compare"></i></span>
-                    </div>
-                </div>
-                <div class="content-card-product">
-                    <p class="price">RD$92.43</p>
-                    <a href="universal.html"><h3>ADAPT UNIVERSAL JOINT</h3></a>
-                    <span class="add-cart"><a href="#">Agregar al carro</a></span>
-                </div>
-            </div>
-        </div>
-        <div class="product-card">
-            <div class="card-product">
-                <div class="container-img">
-                    <a href="cubomecanico.html"><img src="img/CUBOMECANICO.jpg" alt="Cubo Mecanico"></a>
-                    <div class="button-group">
-                        <span><i class="fa-regular fa-eye"></i></span>
-                        <span><i class="fa-regular fa-heart"></i></span>
-                        <span><i class="fa-solid fa-code-compare"></i></span>
-                    </div>
-                </div>
-                <div class="content-card-product">
-                    <p class="price">RD$125.31</p>
-                    <a href="cubomecanico.html"><h3>ADPT CUBO MECANICO TRUPER</h3></a>
-                    <span class="add-cart"><a href="#">Agregar al carro</a></span>
-                </div>
-            </div>
-        </div>
-        <div class="product-card">
-            <div class="card-product">
-                <div class="container-img">
-                    <a href="alicatecurvo.html"><img src="img/alicate-cuervo.webp" alt="alicate curvo"></a>
-                    <div class="button-group">
-                        <span><i class="fa-regular fa-eye"></i></span>
-                        <span><i class="fa-regular fa-heart"></i></span>
-                        <span><i class="fa-solid fa-code-compare"></i></span>
-                    </div>
-                </div>
-                <div class="content-card-product">
-                    <p class="price">RD$304.51</p>
-                    <a href="alicatecurvo.html"><h3> ALICATE D/PRESION CURVO</h3></a>
-                    <span class="add-cart"><a href="#">Agregar al carro</a></span>
-                </div>
-            </div>
-        </div>
-        <div class="product-card">
-            <div class="card-product">
-                <div class="container-img">
-                    <a href="alicateirwin.html"><img src="img/irwin.webp" alt="Alicate de presion irwin"></a>
-                    <div class="button-group">
-                        <span><i class="fa-regular fa-eye"></i></span>
-                        <span><i class="fa-regular fa-heart"></i></span>
-                        <span><i class="fa-solid fa-code-compare"></i></span>
-                    </div>
-                </div>
-                <div class="content-card-product">
-                    <p class="price">RD$1,000.614</p>
-                    <a href="alicateirwin.html"><h3>ALICATE D/PRESION IRWIN 10"</h3></a>
-                    <span class="add-cart"><a href="#">Agregar al carro</a></span>
-                </div>
-            </div>
-        </div>
-        <div class="product-card">
-            <div class="card-product">
-                <div class="container-img">
-                    <a href="pinzatruper.html"><img src="img/pinzatruper.jpg" alt="destornilladores"></a>
-                    <div class="button-group">
-                        <span><i class="fa-regular fa-eye"></i></span>
-                        <span><i class="fa-regular fa-heart"></i></span>
-                        <span><i class="fa-solid fa-code-compare"></i></span>
-                    </div>
-                </div>
-                <div class="content-card-product">
-                    <p class="price">RD$426.40<span></p>
-                    <a href="pinzatruper.html"><h3> ALICATE D/PRESION RECTO TRUPER 10"</h3></a>
-                    <span class="add-cart"><a href="#">Agregar al carro</a></span>
-                </div>
-            </div>
-        </div>
-        <div class="product-card">
-            <div class="card-product">
-                <div class="container-img">
-                    <a href="alicatevikingo.html"> <img src="img/vikingo.jpg" alt="alicate de presion vikingo"></a>
-                    <div class="button-group">
-                        <span><i class="fa-regular fa-eye"></i></span>
-                        <span><i class="fa-regular fa-heart"></i></span>
-                        <span><i class="fa-solid fa-code-compare"></i></span>
-                    </div>
-                </div>
-                <div class="content-card-product">
-                    <p class="price">RD$241.22</p>
-                    <a href="alicatevikingo.html"><h3>ALICATE D/PRESION VIKINGO CURVO</h3></a>
-                    <span class="add-cart"><a href="#">Agregar al carro</a></span>
-                </div>
-            </div>
-        </div>
-        <div class="product-card">
-            <div class="card-product">
-                <div class="container-img">
-                    <a href="electruper.html"><img src="img/elect.jpg" alt="pinza electrica truper"></a>
-                    <div class="button-group">
-                        <span><i class="fa-regular fa-eye"></i></span>
-                        <span><i class="fa-regular fa-heart"></i></span>
-                        <span><i class="fa-solid fa-code-compare"></i></span>
-                    </div>
-                </div>
-                <div class="content-card-product">
-                    <p class="price">RD$339.68</p>
-                    <a href="electruper.html"><h3>ALICATE ELECTRICO TRUPER</h3></a>
-                    <span class="add-cart"><a href="#">Agregar al carro</a></span>
-                </div>
-            </div>
-        </div>
-        <div class="product-card">
-            <div class="card-product">
-                <div class="container-img">
-                    <a href="conforttruper.html"><img src="img/confort.jpg" alt="ALICATE ELECTRICO TRUPER CONFORT"></a>
-                    <div class="button-group">
-                        <span><i class="fa-regular fa-eye"></i></span>
-                        <span><i class="fa-regular fa-heart"></i></span>
-                        <span><i class="fa-solid fa-code-compare"></i></span>
-                    </div>
-                </div>
-                <div class="content-card-product">
-                    <p class="price">RD$457.60</p>
-                    <a href="conforttruper.html"><h3>ALICATE ELECTRICO TRUPER COMFORT</h3></a>
-                    <span class="add-cart"><a href="#">Agregar al carro</a></span>
-                </div>
-            </div>
-        </div>
-        <div class="product-card">
-            <div class="card-product">
-                <div class="container-img">
-                    <a href="alicatepretul.html"><img src="img/pretul.jpg" alt="pinza electrica pretul"></a>
-                    <div class="button-group">
-                        <span><i class="fa-regular fa-eye"></i></span>
-                        <span><i class="fa-regular fa-heart"></i></span>
-                        <span><i class="fa-solid fa-code-compare"></i></span>
-                    </div>
-                </div>
-                <div class="content-card-product">
-                    <p class="price">RD$201.50</p>
-                    <a href="alicatepretul.html"><h3> ALICATE ELECT 8" PRETUL</h3></a>
-                    <span class="add-cart"><a href="#">Agregar al carro</a></span>
-                </div>
-            </div>
-        </div>
+        <!-- Finaliza el bucle que recorre los productos en $resultado. -->
+        <?php } ?>
+    </div>
 </section>
-   <section class="paginacion">
+
+<!--Mostrar la paginación-->
+<section class="paginacion">
     <ul>
-        <li><a href="herraminetas.html" class="active">1</a></li>
-        <li><a href="pagina2.html">2</a></li>
-        <li><a href="pagina3.html">3</a></li>
-        <li><a href="pagina4.html">4</a></li>
-        <li><a href="pagina5.html">5</a></li>
+        <?php
+        for ($i = 1; $i <= $total_paginas; $i++) {
+            // Agregar la clase "active" al enlace de la página actual
+            $claseActiva = ($i == $pagina_actual) ? 'active' : '';
+            echo "<li><a href='herramientas.php?pagina=$i' class='$claseActiva'>$i</a></li>";
+        }
+        ?>
     </ul>
 </section>
 

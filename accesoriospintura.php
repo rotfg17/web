@@ -10,20 +10,21 @@ $resultados_por_pagina = 15; // Define el número de resultados por página
 $offset = ($pagina_actual - 1) * $resultados_por_pagina; // Calcula el valor de desplazamiento (offset)
 
 // Consulta SQL con paginación
-$sql = $con->prepare("SELECT id, nombre, precio FROM productos WHERE id_categoria = 5 LIMIT :offset, :resultados_por_pagina");
+$sql = $con->prepare("SELECT id, nombre, precio FROM productos WHERE id_categoria = 2 LIMIT :offset, :resultados_por_pagina");
 $sql->bindParam(':offset', $offset, PDO::PARAM_INT); // Asocia el valor de offset como un parámetro entero
 $sql->bindParam(':resultados_por_pagina', $resultados_por_pagina, PDO::PARAM_INT); // Asocia el valor de resultados_por_pagina como un parámetro entero
 $sql->execute(); // Ejecuta la consulta SQL
 $resultado = $sql->fetchAll(PDO::FETCH_ASSOC); // Obtiene los resultados de la consulta en un arreglo asociativo
 
 // Contar el número total de resultados
-$sql_count = $con->prepare("SELECT COUNT(*) AS total FROM productos WHERE id_categoria = 5");
+$sql_count = $con->prepare("SELECT COUNT(*) AS total FROM productos WHERE id_categoria = 2");
 $sql_count->execute(); // Ejecuta una consulta para contar el número total de resultados
 $total_resultados = $sql_count->fetchColumn(); // Obtiene el número total de resultados
 
 // Calcular el número total de páginas
 $total_paginas = ceil($total_resultados / $resultados_por_pagina); // Calcula el número total de páginas necesarias para la paginación
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -35,20 +36,19 @@ $total_paginas = ceil($total_resultados / $resultados_por_pagina); // Calcula el
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
-        
         <link rel="stylesheet" href="css/css.css">
-
-        <title>Ferre Seibo - Construccion Ligera</title>
+        <title>Ferre Seibo - Accesorios de pintura</title>
     </head>
 <body>
    
+    
     <?php  include 'menu.php'; ?>
 
    <div class="banner-especial -1r">
-   <img class="img-responsive vdk" src="img/construccion.png" alt="Pintura" width="100%" height="auto" >
+   <img class="img-responsive vdk" src="img/accesorios.png" alt="Accesorios de pintura" width="100%" height="auto" >
     </div>
 
-   <section class="product02">
+    <section class="product02">
     <div class="container-products" id="product-container">
         <?php foreach ($resultado as $row) { ?>
         <!-- Comienza un bucle para recorrer un array de resultados almacenados en $resultado. -->
@@ -103,24 +103,26 @@ $total_paginas = ceil($total_resultados / $resultados_por_pagina); // Calcula el
     </div>
 </section>
 
-   <!--Mostrar la paginación-->
+<!--Mostrar la paginación-->
 <section class="paginacion">
     <ul>
         <?php
         for ($i = 1; $i <= $total_paginas; $i++) {
             // Agregar la clase "active" al enlace de la página actual
             $claseActiva = ($i == $pagina_actual) ? 'active' : '';
-            echo "<li><a href='construccion.php?pagina=$i' class='$claseActiva'>$i</a></li>";
+            echo "<li><a href='accesoriospintura.php?pagina=$i' class='$claseActiva'>$i</a></li>";
         }
         ?>
     </ul>
 </section>
 
+
 <?php include 'footer.php'; ?>
+
 
    <script src="js/script.js"></script>
 
-<script src="js/index.js"></script>   
+   <script src="js/index.js"></script>  
 <script src="js/apps.js"></script>
 </body>
 </html>

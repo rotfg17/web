@@ -18,7 +18,7 @@
         <h3>Todas las categorías</h3>
         <ul>
             <div>
-                <a href="herraminetas.php">
+                <a href="herramientas.php">
                     <li>Herramientas</li>
                 </a><i class="fa-solid fa-angle-right"></i>
             </div>
@@ -33,7 +33,7 @@
                 </a><i class="fa-solid fa-angle-right"></i>
             </div>
             <div>
-                <a href="quimico.php">
+                <a href="quimicos.php">
                     <li>Químico</li>
                 </a><i class="fa-solid fa-angle-right"></i>
             </div>
@@ -97,7 +97,7 @@
                 </a><i class="fa-solid fa-angle-right"></i>
             </div>
             <div>
-                <a href="generales.php">
+                <a href="productosgenerales.php">
                     <li>Productos Generales</li>
                 </a><i class="fa-solid fa-angle-right"></i>
             </div>
