@@ -32,7 +32,7 @@ try {
     $mail->isHTML(true);    //Establecer el formato de correo electronico en HTML                            
     $mail->Subject = 'Detalles de su compra';   //Titulo del correo
 
-    $cuerpo = '<h3>Gracias por su compra</h3> <br> <img src="https://scontent.fhex5-2.fna.fbcdn.net/v/t39.30808-6/271809553_4677616398954273_3880868244671468411_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeGcu-H9-1F0Yevsf-lfSfefkxQrHuKvu9OTFCse4q-70_Aljmpboy_0CQwx4gtn5otpzDPIsz2KG8TI9enfLcvv&_nc_ohc=6zdZ1mn0N9UAX_4fXIY&_nc_ht=scontent.fhex5-2.fna&oh=00_AfBAx-EnZF_veRsub34z-yQt1oos3Dpb6lwgtgg3BhoXFQ&oe=653B7C55" width="150" height="150">  ';
+    $cuerpo = '<h3>Gracias por su compra</h3> <br> <img src="https://scontent.fhex4-2.fna.fbcdn.net/v/t39.30808-6/271809553_4677616398954273_3880868244671468411_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeGcu-H9-1F0Yevsf-lfSfefkxQrHuKvu9OTFCse4q-70_Aljmpboy_0CQwx4gtn5otpzDPIsz2KG8TI9enfLcvv&_nc_ohc=yNbF8OBDMfYAX-38p4b&_nc_zt=23&_nc_ht=scontent.fhex4-2.fna&oh=00_AfD78th-EZhw8LWopoq5BvM2kAF-lFrdqmkKGBlntED3pA&oe=65553195" width="150" height="150">';
     $cuerpo .= '<p>El ID de su compra es <br>'. $id_transaccion .  '</br></p>';
 
     $mail->Body    = utf8_decode($cuerpo);
