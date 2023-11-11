@@ -235,9 +235,8 @@ if ($id == '' || $token == '')  {
                 <span>Compartir</span>
                 <div class="container-buttons-social">
                     <!-- Enlaces para compartir en redes sociales -->
-                    <a href="#"><i class="fa-brands fa-facebook"></i></a>
-                    <a href="#"><i class="fa-brands fa-twitter"></i></a>
-                    <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="https://www.facebook.com/sharer/sharer.php?u=ferreseibo.net/detalles.php" target="_blank"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="https://instagram.com/ferreseibo?igshid=YjFneGh2MGNmMTVx" target="_blank""><i class="fa-brands fa-instagram"></i></a>
                 </div>
             </div>
         </div>

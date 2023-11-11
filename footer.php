@@ -11,9 +11,8 @@
                     <li>Correo Electronico: contabilidadferreseibo@gmail.com</li>
                 </ul>
                 <div class="social-icons">
-                    <span class="facebook"><i class="fa-brands fa-facebook-f"></i></span>
-                    <span class="twitter"><i class="fa-brands fa-twitter"></i></span>
-                    <span class="instagram"><i class="fa-brands fa-instagram"></i></span>
+                    <span  class="facebook"><a href="https://www.facebook.com/people/Ferre-Seibo/100063674135186/" target="_blank"><i class="fa-brands fa-facebook-f"></i></span></a>
+                    <span class="instagram"><a href="https://instagram.com/ferreseibo?igshid=YjFneGh2MGNmMTVx" target="_blank"><i class="fa-brands fa-instagram"></i></span></a>
                 </div>
             </div>
 
@@ -32,7 +31,7 @@
                     <ul>
                         <li><a href="#">Mi cuenta</a></li>
                         <li><a href="compras.php">Mis pedidos</a></li>
-                        <li><a href="#">Lista de deseos</a></li>
+                        <li><a href="wishlist.php">Lista de deseos</a></li>
                         
                     </ul>
             </div>

@@ -125,9 +125,14 @@
         <div class="flex logo">
             <a href="index.php"><img src="img/Logo.png"></a>
         </div>
-        <div class="flex input">
-            <input type="text" placeholder="Buscar">
-            <i class="fas fa-search"></i>
+        <div class=" flex flex-container">
+        <form action="buscar.php" method="GET" class="my-form">
+            <div class="input-group">
+                <input id="search" name="search" class="form-control" type="text" placeholder="Buscar..." aria-label="Buscar..." aria-describedby="btnNavbarSearch" />
+                <button class="btn btn-warning" id="btnNavbarSearch" type="submit"><i class="fas fa-search"></i></button>
+            </div>
+        </form>
+
         </div>
         <div class="flex right">
 
