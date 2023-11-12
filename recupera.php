@@ -3,6 +3,7 @@
 
 // Se incluye el archivo 'config.php' ubicado en la carpeta 'php'.
 require 'php/config.php';
+require 'clases/clienteFunciones.php';
 
 // Se crea una nueva instancia de la clase 'Database' para gestionar la conexión a la base de datos.
 $db = new Database();

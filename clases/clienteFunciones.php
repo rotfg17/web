@@ -108,7 +108,8 @@ function validaToken($id, $token, $con)
     $sql->execute([$id, $token]);
     if ($sql->fetchColumn() > 0) {
         if (activarUsuario($id, $con)) {
-            header("Location: template.php?mensaje=<p> ¡Tu cuenta ha sido activada con éxito! Ahora puedes acceder a tu cuenta y disfrutar de nuestros servicios.</p>");
+            header("Location: template.php?mensaje=<p> 
+            ¡Enhorabuena! Tu cuenta ha sido activada con éxito. Ahora estás listo para aprovechar al máximo nuestros servicios. Si tienes alguna pregunta o necesitas asistencia, no dudes en ponerte en contacto con nuestro equipo de soporte. ¡Bienvenido y gracias por unirte a nosotros!</p>");
             exit;
         } else {
             header("Location: template.php?mensaje=<p>Se ha producido un error interno al activar tu cuenta. Por favor, inténtalo más tarde o contacta al soporte técnico.</p>");

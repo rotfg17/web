@@ -803,6 +803,32 @@
           z-index: 101;
       }
   }
+  @media (min-width: 320px) {
+
+    /* Estilos para la barra lateral */
+    .sidebar {
+        background-color: var(--blanco);
+        width: 200px;
+        height: 100%;
+        transform: translateX(-390px);
+        /* Inicialmente oculta la barra lateral */
+        transition: all 0.5s;
+        height: 100%;
+        position: absolute;
+        z-index: 101;
+        overflow: scroll;
+        box-shadow: 2px 2px 30px var(--oscuro);
+    }
+
+    .fa-xmark {
+        top: 20px;
+        left: 250px;
+        position: absolute;
+        font-size: 30px;
+        display: none;
+        z-index: 101;
+    }
+}
 
   @media (min-width: 768px) {
 

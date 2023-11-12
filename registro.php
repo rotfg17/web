@@ -3,6 +3,7 @@
 
 // Se incluye el archivo 'config.php' ubicado en la carpeta 'php'.
 require 'php/config.php';
+require 'clases/clienteFunciones.php';
 
 // Se crea una nueva instancia de la clase 'Database' para gestionar la conexión a la base de datos.
 $db = new Database();
@@ -77,26 +78,62 @@ if (!empty($_POST)) {
                 $asunto = "Activar cuenta - Ferreteria FerreSeibo";
 
                 // URL de la imagen del logo de la empresa
-                $logoURL = "https://scontent.fhex5-2.fna.fbcdn.net/v/t39.30808-6/271809553_4677616398954273_3880868244671468411_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeGcu-H9-1F0Yevsf-lfSfefkxQrHuKvu9OTFCse4q-70_Aljmpboy_0CQwx4gtn5otpzDPIsz2KG8TI9enfLcvv&_nc_ohc=6zdZ1mn0N9UAX_4fXIY&_nc_ht=scontent.fhex5-2.fna&oh=00_AfBAx-EnZF_veRsub34z-yQt1oos3Dpb6lwgtgg3BhoXFQ&oe=653B7C55";
+                $logoURL = 'https://scontent.fhex5-2.fna.fbcdn.net/v/t39.30808-6/271809553_4677616398954273_3880868244671468411_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeGcu-H9-1F0Yevsf-lfSfefkxQrHuKvu9OTFCse4q-70_Aljmpboy_0CQwx4gtn5otpzDPIsz2KG8TI9enfLcvv&_nc_ohc=yNbF8OBDMfYAX_DSKIZ&_nc_ht=scontent.fhex5-2.fna&oh=00_AfCMgc7U0UCc8hiPbac-fVJaYofACDRyPwScbVo3psd8Vw&oe=65553195';
 
                 // Construir el cuerpo del correo electrónico en formato HTML.
                 $cuerpo = "<html>
                 <head>
                     <style>
-                        // Estilos CSS para el correo
+                        /* Estilos CSS para el correo */
+                        .container {
+                            max-width: 600px;
+                            margin: 0 auto;
+                            padding: 20px;
+                            font-family: Arial, sans-serif;
+                        }
+
+                        .header {
+                            text-align: center;
+                        }
+
+                        .logo {
+                            max-width: 100px;
+                            height: auto;
+                        }
+
+                        .btn {
+                            display: inline-block;
+                            padding: 10px 20px;
+                            background-color: #007BFF;
+                            color: #FFFFFF;
+                            text-decoration: none;
+                            border-radius: 5px;
+                        }
+
+                        .btn-primary {
+                            background-color: #007BFF;
+                            color: #FFFFFF;
+                        }
                     </style>
                 </head>
                 <body>
                     <div class='container'>
                         <div class='header'>
                             <img class='logo' src='$logoURL'>
-                            <h1>Activar cuenta</h1>
+                            <h1>¡Bienvenido(a) a Ferre Seibo!</h1>
                         </div>
-                        <p>Estimado $nombres,</p>
-                        <p>Para continuar con el proceso de registro, es obligatorio dar click en el siguiente enlace <a href='$url'>Activar cuenta</a></p>
+                        <p>&iexcl;Hola $nombres!</p>
+                        <p>&iexcl;Felicidades por dar el primer paso hacia una experiencia increíble en Ferre Seibo!</p>
+                        <p>Tu cuenta ha sido creada y ahora solo falta un paso para desbloquear todas las funcionalidades emocionantes que tenemos para ti. Haz clic en el enlace a continuación para activar tu cuenta y sumergirte en un mundo lleno de posibilidades:</p>
+
+                        <p><a href='$url' class='btn btn-primary'>Activar cuenta</a></p>
+                        <p>Recuerda que la seguridad de tu cuenta es vital. Si recibes este correo por error o no reconoces la actividad, por favor, contáctanos de inmediato.</p>
+                        <p>Gracias por elegir Ferre Seibo. Estamos ansiosos por tenerte como parte de nuestra comunidad.</p>
+                        <p>&iexcl;Bienvenido/a a bordo!</p>
+                        <p>Saludos, <br>El equipo de Ferre Seibo. </p>
                     </div>
                 </body>
-                </html>";
+            </html>";
 
                 // Cabecera para enviar correo HTML
                 $cabecera = "MIME-Version: 1.0\r\n";
