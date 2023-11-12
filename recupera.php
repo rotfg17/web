@@ -54,29 +54,63 @@ if (!empty($_POST)) {
                 $url = SITE_URL . '/reset_password.php?id=' . $user_id . '&token=' . $token;
 
                 // URL de la imagen del logo de la empresa
-                $logoURL = "https://scontent.fhex5-2.fna.fbcdn.net/v/t39.30808-6/271809553_4677616398954273_3880868244671468411_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeGcu-H9-1F0Yevsf-lfSfefkxQrHuKvu9OTFCse4q-70_Aljmpboy_0CQwx4gtn5otpzDPIsz2KG8TI9enfLcvv&_nc_ohc=6zdZ1mn0N9UAX_4fXIY&_nc_ht=scontent.fhex5-2.fna&oh=00_AfBAx-EnZF_veRsub34z-yQt1oos3Dpb6lwgtgg3BhoXFQ&oe=653B7C55";
-                $asunto = "Recuperar contraseña - Ferreteria FerreSeibo";
+                $logoURL = "https://scontent.fhex5-2.fna.fbcdn.net/v/t39.30808-6/271809553_4677616398954273_3880868244671468411_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeGcu-H9-1F0Yevsf-lfSfefkxQrHuKvu9OTFCse4q-70_Aljmpboy_0CQwx4gtn5otpzDPIsz2KG8TI9enfLcvv&_nc_ohc=yNbF8OBDMfYAX_DSKIZ&_nc_ht=scontent.fhex5-2.fna&oh=00_AfCMgc7U0UCc8hiPbac-fVJaYofACDRyPwScbVo3psd8Vw&oe=65553195";
+                $asunto = "Recuperar credencial - Ferreteria FerreSeibo";
 
                 // Construir el cuerpo del correo electrónico en formato HTML.
                 $cuerpo = "<html>
                 <head>
                     <style>
-                        // Estilos CSS para el correo
+                        /* Estilos CSS para el correo */
+                        .container {
+                            max-width: 600px;
+                            margin: 0 auto;
+                            padding: 20px;
+                            font-family: Arial, sans-serif;
+                        }
+
+                        .header {
+                            text-align: center;
+                        }
+
+                        .logo {
+                            max-width: 100px;
+                            height: auto;
+                        }
+
+                        .btn {
+                            display: inline-block;
+                            padding: 10px 20px;
+                            background-color: #007BFF;
+                            color: #FFFFFF;
+                            text-decoration: none;
+                            border-radius: 5px;
+                        }
+
+                        .btn-primary {
+                            background-color: #007BFF;
+                            color: #FFFFFF;
+                        }
                     </style>
                 </head>
                 <body>
                     <div class='container'>
                         <div class='header'>
                             <img class='logo' src='$logoURL'>
-                            <h1>Cambio de contraseña</h1>
+                            <h1>¡Bienvenido(a) a Ferre Seibo!</h1>
                         </div>
-                        <p>Estimado $nombres,</p>
-                        <p>Has solicitado un cambio de contraseña en nuestro sitio web. Por favor, haz clic en el siguiente enlace para restablecer tu contraseña:</p>
-                        <p><a href='$url'>$url</a></p>
-                        <p>Si no realizaste esta solicitud, ignora este correo.</p>
+                        <p>&iexcl;Hola $nombres!</p>
+                        <p>Hemos recibido tu solicitud para restablecer la contraseña de tu cuenta en Ferre Seibo. </p>
+                        <p>Estamos aquí para ayudarte a recuperar el acceso.</p>
+                        
+                        <p>Por favor, haz clic en el siguiente enlace para crear una nueva contraseña:</p>
+                        <p><a href='$url' class='btn btn-warning'>Recuperar contraseña</a></p>
+                        <p>Si no has solicitado esta acción, te recomendamos cambiar tu contraseña actual de inmediato y ponerse en contacto con nuestro equipo de soporte.</p>
+                        <p>Gracias por confiar en Ferre Seibo. Si necesitas ayuda adicional, no dudes en ponerte en contacto con nosotros.</p>
+                        <p>Saludos, <br>El equipo de Ferre Seibo. </p>
                     </div>
                 </body>
-                </html>";
+            </html>";
 
                 // Cabecera para enviar correo HTML
                 $cabecera = "MIME-Version: 1.0\r\n";
