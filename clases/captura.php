@@ -17,7 +17,7 @@ if (is_array($datos)) {
 
     // Obtiene el ID del cliente de la sesión
     $id_cliente = $_SESSION['user_cliente'];
-    $sql = $con->prepare("SELECT correo FROM clientes WHERE id=? And activo = 1");
+    $sql = $con->prepare("SELECT correo, nombres FROM clientes WHERE id=? And activo = 1");
     $sql->execute([$id_cliente]);
     $row_cliente = $sql->fetch(PDO::FETCH_ASSOC);
 
@@ -28,6 +28,7 @@ if (is_array($datos)) {
     $fecha = $datos['detalles']['update_time'];
     $fecha_nueva = date('Y-m-d H:i:s', strtotime($fecha));
     $correo = $row_cliente['correo'];
+    $nombres = $row_cliente['nombres'];
     $id_cliente = $_SESSION['user_cliente'];
 
     // Inserta los datos de la compra en la base de datos
@@ -47,6 +48,8 @@ if (is_array($datos)) {
                 $sql->execute([$clave]);
                 $row_prod = $sql->fetch(PDO::FETCH_ASSOC);
 
+                $nombre = $row_prod['nombre'];
+                $cantidad = $row_prod['cantidad'];
                 $precio = $row_prod['precio'];
                 $descuento = $row_prod['descuento'];
                 $precio_desc = $precio - (($precio * $descuento) / 100);
@@ -58,14 +61,92 @@ if (is_array($datos)) {
 
             // Envía un correo electrónico con detalles de la compra
             require_once 'Mailer.php';
+?>
+<?php
+$asunto = "Detalles de su compra";
 
-            $asunto = "Detalles de su compra";
-            $cuerpo = '<h3>Gracias por su compra</h3> <br> <img src="https://scontent.fhex5-1.fna.fbcdn.net/v/t39.30808-6/271809553_4677616398954273_3880868244671468411_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=a2f6c7&_nc_eui2=AeGcu-H9-1F0Yevsf-lfSfefkxQrHuKvu9OTFCse4q-70_Aljmpboy_0CQwx4gtn5otpzDPIsz2KG8TI9enfLcvv&_nc_ohc=NO8mwZ2CfrQAX8vzRWV&_nc_ht=scontent.fhex5-1.fna&oh=00_AfB7PNsIynoDpBRnPmMTP5VWskjRl8SZo9NIuJToevk00g&oe=6523C155" width="150" height="150">  ';
-            $cuerpo .= '<p>El ID de su compra es <br>' . $id_transaccion .  '</br></p>';
+// Estilos en línea para el cuerpo del correo
+$estilos = "
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f4f4f4;
+        color: #333;
+        margin: 0;
+        padding: 0;
+    }
+
+    h3 {
+        color: #3498db;
+        margin-bottom: 10px;
+    }
+
+    p {
+        margin-bottom: 8px;
+    }
+
+    img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+    }
+
+    .container {
+        max-width: 600px;
+        margin: 20px auto;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .thank-you {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .order-details {
+        margin-bottom: 20px;
+    }
+
+    .support-info {
+        margin-top: 20px;
+    }
+";
+
+// Cuerpo del correo con estilos en línea
+$cuerpo = '<html>';
+$cuerpo .= '<head>';
+$cuerpo .= '<style>' . $estilos . '</style>';
+$cuerpo .= '</head>';
+$cuerpo .= '<body>';
+$cuerpo .= '<div class="container">';
+$cuerpo .= '<div class="thank-you"><h3>¡Gracias por su compra!</h3></div>';
+$cuerpo .= '<img src="https://scontent.fhex5-2.fna.fbcdn.net/v/t39.30808-6/271809553_4677616398954273_3880868244671468411_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeGcu-H9-1F0Yevsf-lfSfefkxQrHuKvu9OTFCse4q-70_Aljmpboy_0CQwx4gtn5otpzDPIsz2KG8TI9enfLcvv&_nc_ohc=yNbF8OBDMfYAX_DSKIZ&_nc_ht=scontent.fhex5-2.fna&oh=00_AfCMgc7U0UCc8hiPbac-fVJaYofACDRyPwScbVo3psd8Vw&oe=65553195" width="100" height="auto">';
+$cuerpo .= '<p>&iexcl;Hola ' . $nombres .  '!</p>';
+$cuerpo .= '<p>Aquí tienes un resumen de tu pedido:</p>';
+$cuerpo .= '<div class="order-details">';
+$cuerpo .= '<p>&iexcl;Gracias por elegir a Ferre Seibo!</p>';
+$cuerpo .= '<p>Estamos emocionados de informarte que tu compra ha sido procesada con éxito.   <b>' . $nombre .  '</b> está en camino y pronto lo tendrás en tus manos.</p>';
+$cuerpo .= '<div class="order-details">';
+$cuerpo .= '<p class="order-info">Orden #: <span> <b>' . $id_transaccion .  '</b></span></p>';
+$cuerpo .= '<p class="order-info">Nombre del producto: <span> <b>' . $nombre .  '</b></span></p>';
+$cuerpo .= '<p class="order-info">Cantidad: <span> <b>' . $cantidad .  '</b></span></p>';
+$cuerpo .= '<p class="order-info">Total: <span> <b>' . $total .  '</b></span></p>';
+$cuerpo .= '</div>';
+$cuerpo .= '<p>Si tienes alguna pregunta sobre tu pedido o necesitas asistencia, no dudes en ponerte en contacto con nuestro equipo de soporte.</p>';
+$cuerpo .= '<p>Agradecemos tu confianza en nosotros y esperamos que disfrutes de tu nuevo producto. <b>' . $nombre .  '</b> Gracias por ser parte de nuestra comunidad</p>';
+$cuerpo .= '<div class="support-info"><p>Saludos,<br>El equipo de Ferre Seibo</p></div>';
+$cuerpo .= '</div>';
+$cuerpo .= '</body>';
+$cuerpo .= '</html>';
+
 
             $mailer = new Mailer();
             $mailer->enviarCorreo($correo, $asunto, $cuerpo);
         }
+
+       
 
         // Limpia el carrito de la sesión
         unset($_SESSION['carrito']);

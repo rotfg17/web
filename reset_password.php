@@ -51,10 +51,10 @@ if (!empty($_POST)) {
         $pass_hash = password_hash($password, PASSWORD_DEFAULT);
         // Se intenta activar la nueva contraseña en la base de datos.
         if (activaPassword($user_id, $pass_hash, $con)) {
-            echo "Contraseña modificada. <b><a href='login.php'>Iniciar sesión</a>";
+            header("Location: template.php?mensaje=<p>Tu contraseña ha sido actualizada con éxito. Ahora puedes usar tu nueva contraseña para acceder a tu cuenta.</p>");
             exit;
         } else {
-            $errors[] = "No se pudo cambiar la contraseña. Inténtalo nuevamente.";
+            header("Location: template.php?mensaje=<p>No hemos podido cambiar tu contraseña. Asegúrate de que la información proporcionada sea correcta e inténtalo de nuevo. Si el problema persiste, ponte en contacto con nuestro equipo de soporte.</p>");
         }
     }
 }
