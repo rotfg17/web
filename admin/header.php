@@ -108,8 +108,13 @@
                                 Usuarios
                             </a>
 
+                            <a class="nav-link" href="<?php echo ADMIN_URL;?>blogs">
+                                <div class="sb-nav-link-icon"><i class="fa-brands fa-blogger"></i></div>
+                                Blogs
+                            </a>
+
                             
-                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
+                          <!--  <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
                                 <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
                                 Layouts
                                 <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
@@ -121,7 +126,7 @@
                                 </nav>
                             </div>
                         </div>
-                    </div>
+                    </div>-->
                     <div class="sb-sidenav-footer">
                         <div class="small">Conectado como:</div>
                         <?php if(isset($_SESSION['user_id'])) { ?>

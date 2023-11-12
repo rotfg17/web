@@ -1,34 +1,34 @@
-<?php  
+<?php 
 
-// Requiere los archivos necesarios
-require '../config/database.php';
-require '../config/config.php';
+// Se requieren los archivos necesarios, incluyendo la configuración y la base de datos.
+require '../config/config.php'; 
+require '../config/database.php'; 
 
-// Verifica si el usuario está autenticado
+// Verifica si el usuario está autenticado. Si no lo está, redirige a la página de inicio.
 if (!isset($_SESSION['user_type'])){
-   header('Location: ../index.php');
-   exit;
+    header('Location: index.php');
+    exit;
 }
 
-// Verifica si el usuario es de tipo 'admin'
+// Verifica si el usuario es de tipo 'admin'. Si no lo es, redirige a la página de inicio.
 if ($_SESSION['user_type'] != 'admin'){
-    header('Location: ../../index.php');
+    header('Location: ../index.php');
     exit;
- }
+}
 
+// Se crea una instancia de la clase Database para manejar la conexión a la base de datos.
 $db = new Database();
 $con = $db->conectar();
+
+
+$stmt = "SELECT * FROM entradas_blog where activo=1 ORDER BY fecha_publicacion DESC ";
+$resultado = $con->query($stmt);
+$entradas = $resultado->fetchAll(PDO::FETCH_ASSOC);
 
 // Parámetros de paginación
 $porPagina = 15; // Número de resultados por página
 $pagina = isset($_GET['pagina']) ? $_GET['pagina'] : 1; // Página actual
 
-// Consulta SQL
-$sql = "SELECT DISTINCT dc.id, dc.id_compra, c.id_transaccion, dc.nombre, dc.precio, dc.cantidad 
-            FROM detalle_compra dc
-            INNER JOIN compra c ON dc.id_compra = c.id";
-$resultado = $con->query($sql);
-$productos = $resultado->fetchAll(PDO::FETCH_ASSOC);
 
 // Total de resultados
 $totalResultados = $resultado->rowCount();
@@ -40,51 +40,49 @@ $totalPaginas = ceil($totalResultados / $porPagina);
 $indiceInicio = ($pagina - 1) * $porPagina;
 
 // Consulta para obtener los resultados de la página actual
-$sqlPaginacion = $sql . " LIMIT $indiceInicio, $porPagina";
+$sqlPaginacion = $stmt . " LIMIT $indiceInicio, $porPagina";
 $resultadoPaginacion = $con->query($sqlPaginacion);
 $productos = $resultadoPaginacion->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
 
-<?php include '../header.php';?>
-<main>
-    <div class="container-fluid px-4">
-        <h2 class="mt-3">Pedidos</h2>
-            <br><br>
-        <div class="table-responsive">
-            <table class="table table-hover">
-                <thead>
-                    <tr>                   
-                        <th scope="col">PEDIDO N.</th>
-                        <th scope="col">Nombre producto</th>
-                        <th scope="col">Precio</th>
-                        <th scope="col">Cantidad</th>
-                        <th scope="col"></th>
-                        <th scope="col"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                  <?php foreach($productos as $producto) { ?>
-                        <tr>                          
-                            <td><?php echo $producto['id_transaccion'] ?></td>
-                            <td><?php echo $producto['nombre'] ?></td>
-                            <td><?php echo $producto['precio'] ?></td>
-                            <td><?php echo $producto['cantidad'] ?></td>
-                            <td>
-                            </td>
-                        </tr>
+<?php include '../header.php'; ?>
+<div class="container-fluid px-4">
+<h2  class="mt-3">Entradas de blogs</h2>
+<br>
+<a href="procesar_entrada.php" class="btn btn-primary">Agregar</a>
 
-                    <?php } ?>
-                </tbody>
-            </table>
-        </div>
-        
+        <br><br>
 
-    </div>
-</main>
-
-<!-- Modal trigger button -->
-
+        <table class="table">
+    <thead>
+        <tr>
+            <th>Título</th>
+            <th>Contenido</th>
+            <th>Publicado</th>
+            <th>Editar</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($entradas as $entrada) : ?>
+            <tr>
+                <td><?= $entrada['titulo']; ?></td>
+                <td><?= substr($entrada['contenido'], 0, 100); ?>...</td>
+                
+                <td><?= $entrada['fecha_publicacion']; ?></td>
+                
+                <td>
+                    <a class="btn btn-warning btn-sm" href="edita.php?id=<?php echo $entrada['id']; ?>">Editar</a>
+                </td>
+                <td>
+                <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalElimina"
+                data-bs-id=" <?php echo $entrada['id'] ?>">
+                <i class="fa-solid fa-xmark"></i></button>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
 
 <!-- Modal Body -->
 <!-- if you want to close by clicking outside the modal, delete the last endpoint:data-bs-backdrop and data-bs-keyboard -->
@@ -96,7 +94,7 @@ $productos = $resultadoPaginacion->fetchAll(PDO::FETCH_ASSOC);
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-            ¿Deseas eliminar este producto?
+            ¿Deseas eliminar esta entrada de blog?
             </div>
             <div class="modal-footer">
                 <form action="elimina.php" method="post">
@@ -157,6 +155,6 @@ $productos = $resultadoPaginacion->fetchAll(PDO::FETCH_ASSOC);
     <?php endif; ?>
   </ul>
 </nav>
-
-
-<?php require_once '../footer.php';
+    
+    </div>
+<?php include '../footer.php'; ?>

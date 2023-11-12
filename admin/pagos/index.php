@@ -24,7 +24,8 @@ $porPagina = 15; // Número de resultados por página
 $pagina = isset($_GET['pagina']) ? $_GET['pagina'] : 1; // Página actual
 
 // Consulta SQL
-$sql = "SELECT id, id_transaccion, fecha, status, correo, id_cliente, total, medio_pago FROM compra";
+$sql = "SELECT c.id, c.id_transaccion, c.fecha, c.status, c.correo,cl.nombres, cl.apellidos, c.total, c.medio_pago  FROM compra c
+INNER JOIN clientes cl ON c.id_cliente = cl.id";
 $resultado = $con->query($sql);
 $productos = $resultado->fetchAll(PDO::FETCH_ASSOC);
 
@@ -57,7 +58,8 @@ $productos = $resultadoPaginacion->fetchAll(PDO::FETCH_ASSOC);
                         <th scope="col">Fecha</th>
                         <th scope="col">Status</th>
                         <th scope="col">Correo electrónico</th>
-                        <th scope="col">Nombre</th>
+                        <th scope="col">Nombres</th>
+                        <th scope="col">Apellidos</th>
                         <th scope="col">Total pedido</th>
                         <th scope="col">Método de pago</th>
                         <th scope="col"></th>
@@ -71,7 +73,8 @@ $productos = $resultadoPaginacion->fetchAll(PDO::FETCH_ASSOC);
                             <td><?php echo $producto['fecha'] ?></td>
                             <td><?php echo $producto['status'] ?></td>
                             <td><?php echo $producto['correo'] ?></td>
-                            <td><?php echo $producto['id_cliente'] ?></td>
+                            <td><?php echo $producto['nombres'] ?></td>
+                            <td><?php echo $producto['apellidos'] ?></td>
                             <td><?php echo $producto['total'] ?></td>
                             <td><?php echo $producto['medio_pago'] ?></td>
                             <td>
@@ -85,19 +88,6 @@ $productos = $resultadoPaginacion->fetchAll(PDO::FETCH_ASSOC);
     </div>
 </main>
 
-
-<!-- Este script funciona para eliminar el producto deseada -->
-<script>
-    let eliminaModal = document.getElementById('modalElimina')
-    eliminaModal.addEventListener('show.bs.modal', function(event){
-        let button = event.relatedTarget
-        let id = button.getAttribute('data-bs-id')
-
-        let modalInput = eliminaModal.querySelector('.modal-footer input')
-        modalInput.value = id
-    })
-
-</script>
 
 <nav aria-label="Page navigation">
   <ul class="pagination justify-content-center">
