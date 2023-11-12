@@ -26,7 +26,7 @@ $pagina = isset($_GET['pagina']) ? $_GET['pagina'] : 1; // Página actual
 // Consulta SQL
 $sql = "SELECT DISTINCT dc.id, dc.id_compra, c.id_transaccion, dc.nombre, dc.precio, dc.cantidad 
             FROM detalle_compra dc
-            INNER JOIN compra c ON dc.id_compra = c.id WHERE activo = 1";
+            INNER JOIN compra c ON dc.id_compra = c.id WHERE activo = 0";
 $resultado = $con->query($sql);
 $productos = $resultado->fetchAll(PDO::FETCH_ASSOC);
 
@@ -50,7 +50,7 @@ $productos = $resultadoPaginacion->fetchAll(PDO::FETCH_ASSOC);
 <main>
     <div class="container-fluid px-4">
         <h2 class="mt-3">Pedidos</h2>
-        <a href="despachada.php" class="btn btn-success">Despachadas</a>
+        <a href="index.php" class="btn btn-primary">Pendientes</a>
             <br><br>
         <div class="table-responsive">
             <table class="table table-hover">
@@ -71,63 +71,15 @@ $productos = $resultadoPaginacion->fetchAll(PDO::FETCH_ASSOC);
                             <td><?php echo $producto['nombre'] ?></td>
                             <td><?php echo $producto['precio'] ?></td>
                             <td><?php echo $producto['cantidad'] ?></td>
-                            <td>
-                            <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#modalElimina"
-                              data-bs-id=" <?php echo $producto['id'] ?>">
-                              <i class="fa-solid fa-bag-shopping"></i>
-                            </button>
-                            </td>
                         </tr>
 
                     <?php } ?>
                 </tbody>
             </table>
         </div>
-        
-
     </div>
 </main>
 
-<!-- Modal trigger button -->
-
-
-<!-- Modal Body -->
-<!-- if you want to close by clicking outside the modal, delete the last endpoint:data-bs-backdrop and data-bs-keyboard -->
-<div class="modal fade" id="modalElimina" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-sm" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalTitleId">Confirmar</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-            ¿Deseas despachar esta orden?
-            </div>
-            <div class="modal-footer">
-                <form action="despacha.php" method="post">
-
-                <input type="hidden" name="id">
-
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button type="submit" class="btn btn-danger">Eliminar</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Este script funciona para eliminar el producto deseada -->
-<script>
-    let eliminaModal = document.getElementById('modalElimina')
-    eliminaModal.addEventListener('show.bs.modal', function(event){
-        let button = event.relatedTarget
-        let id = button.getAttribute('data-bs-id')
-
-        let modalInput = eliminaModal.querySelector('.modal-footer input')
-        modalInput.value = id
-    })
-
-</script>
 
 <nav aria-label="Page navigation">
   <ul class="pagination justify-content-center">

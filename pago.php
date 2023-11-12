@@ -124,6 +124,7 @@ id="loader"  style="
 <!-- Fin del contenedor del loader -->
 
 
+
 <script>
     // Función para mostrar el loader
     function showLoader() {
