@@ -37,6 +37,30 @@ $totalRegistros = $conexion->query($sqlTotal)->fetch_assoc()['total'];
 $totalPaginas = ceil($totalRegistros / $elementosPorPagina);
 
 
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Procesamiento del formulario solo cuando se envía
+    $titulo = $_POST["titulo"];
+    $contenido = $_POST["contenido"];
+    // Manejo de la imagen
+    if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] == UPLOAD_ERR_OK) {
+        $imagen_nombre = $_FILES['imagen']['name'];
+        $imagen_temp = $_FILES['imagen']['tmp_name'];
+
+        // Mover la imagen a una ubicación permanente
+        $carpeta_destino = 'img/blogs/';
+        $ruta_imagen = $carpeta_destino . $imagen_nombre;
+        move_uploaded_file($imagen_temp, $ruta_imagen);
+    } else {
+        // Manejar el caso en el que no se seleccionó una imagen
+        $ruta_imagen = null; // O establece una ruta predeterminada si lo prefieres
+    }
+}
+
+// Consulta SQL para obtener todas las entradas activas ordenadas por fecha de publicación
+$stmt = $con->prepare("SELECT * FROM entradas_blog WHERE activo = 1 ORDER BY fecha_publicacion DESC");
+$stmt->execute();
+$entradas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 
 <!DOCTYPE html>
@@ -288,9 +312,10 @@ $totalPaginas = ceil($totalRegistros / $elementosPorPagina);
     <h1 class="heading-1">Últimos Blogs</h1>
 
     <div class="container-blogs">
+    <?php foreach ($entradas as $entrada) : ?>
         <div class="card-blog">
             <div class="container-imag">
-              <a href="tipostarugos.html"><img src="img/tarugos.png" width="767" height="250" alt="Tipos de tarugos"></a>  
+            <img src="img/blogs/<?php echo $entrada['imagen']; ?>" alt="imagen-entrada">  
                 <div class="button-group-blog">
                     <span>
                         <i class="fa-solid fa-magnifying-glass"></i>
@@ -301,55 +326,15 @@ $totalPaginas = ceil($totalRegistros / $elementosPorPagina);
                 </div>
             </div>
             <div class="content-blog">
-                <a href="tipostarugos.html"><h3>Tipos de tarugos: ¿Cómo elegir el ideal?</h3></a>
-                <span>04 septiembre 2023</span>
+              <h3><a href="detalle_blog.php?id=<?php echo $entrada['id']; ?>"class="text-reset text-monospace"><?php echo $entrada['titulo']; ?></a></h3>
+                
                 <p>
-                    En Ferre Seibo descubre los diversos tipos de tarugos para tus proyectos de construcción. Conoce sus tipos, usos y cómo elegir el adecuado. ¡Entra aquí!
+                <?php echo substr($entrada['contenido'], 0, 300);; ?>
                 </p>
-                <div class="btn-read-more"><a href="tipostarugos.html"> Leer más</a></div>
+                <div class="btn-read-more"><a href="detalle_blog.php?id=<?php echo $entrada['id']; ?>"> Leer más</a></div>
             </div>
         </div>
-        <div class="card-blog">
-            <div class="container-imag">
-                <a href="tiposcerraduras.html"><img src="img/cerradura.png" width="767" height="250" alt="Tipos de cerraduras"></a>
-                <div class="button-group-blog">
-                    <span>
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                    </span>
-                    <span>
-                        <i class="fa-solid fa-link"></i>
-                    </span>
-                </div>
-            </div>
-            <div class="content-blog">
-             <a href="tiposcerraduras.html"><h3>Tipos de cerraduras: ¿Cómo elegir el ideal?</h3></a>
-                <span>04 septiembre 2023</span>
-                <p>
-                    En Ferre Seibo descubre los diferentes tipos de cerraduras disponibles para brindar seguridad a tu hogar y encuentra tu opción ideal. ¡Entra aquí!
-                </p>
-                <div class="btn-read-more"><a href="tiposcerraduras.html"> Leer más</a></div>
-            </div>
-        </div>
-        <div class="card-blog">
-            <div class="container-imag">
-              <a href="interruptores.html"><img src="img/interruptores.png" width="767" height="250" alt="Tipos Interruptores"></a>
-                <div class="button-group-blog">
-                    <span>
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                    </span>
-                    <span>
-                        <i class="fa-solid fa-link"></i>
-                    </span>
-                </div>
-            </div>
-            <div class="content-blog">
-                <a href="interruptores.html"><h3>Tipos de interruptores: Características</h3></a>
-                <span>04 septiembre 2023</span>
-                <p>
-                    En Ferre Seibo explora los diferentes tipos de interruptores y sus características para que selecciones el más adecuado para tus necesidades. ¡Entra aquí!
-                </p>
-                <div class="btn-read-more"><a href="interruptores.html"> Leer más</a></div>
-            </div>
+            <?php endforeach; ?>
         </div>
 </section>
 </main>

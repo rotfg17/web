@@ -13,6 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Procesamiento del formulario solo cuando se envía
     $titulo = $_POST["titulo"];
     $contenido = $_POST["contenido"];
+    
 
     // Manejo de la imagen
     if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] == UPLOAD_ERR_OK) {
