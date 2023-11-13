@@ -45,8 +45,8 @@ if (!empty($_POST)) {
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
+        <meta name="description" content="¡Somos la Ferretería con la más alta calidad y garantía en nuestros productos y servicios de nuestra ciudad!" />
+        <meta name="author" content="Robinson Chalas" />
         <title>Login - Ferre Seibo</title>
         <link href="css/styles.css" rel="stylesheet" />
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>

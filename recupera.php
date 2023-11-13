@@ -87,7 +87,7 @@ if (!empty($_POST)) {
                             border-radius: 5px;
                         }
 
-                        .btn-primary {
+                        .btn-Warning {
                             background-color: #007BFF;
                             color: #FFFFFF;
                         }
