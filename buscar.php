@@ -45,9 +45,10 @@ $productos = $sql->fetchAll(PDO::FETCH_ASSOC);
     
 <?php include 'menu.php'; ?> 
  
-<h2>Resultado de Búsqueda</h2>
+
 
 <section class="product02">
+<h2>Resultado de Búsqueda</h2>
     <div class="container-products" id="product-container">
         <?php foreach ($productos as $row) { ?>
         <!-- Comienza un bucle para recorrer los productos obtenidos en la búsqueda. -->

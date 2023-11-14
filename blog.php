@@ -91,7 +91,7 @@ $entradasPaginadas = $stmtPaginacion->fetchAll(PDO::FETCH_ASSOC);
                     <div class="content-base-wrapImage">
                         <a href="detalle_blog.php?id=<?php echo $entrada['id']; ?>">
                             <div class="img-bg" style="background-image: url('<?php echo $entrada['imagen']; ?>'); background-position: inherit;"></div>
-                            <img src="img/blogs/<?php echo $entrada['imagen']; ?>" alt="imagen-entrada" style="width: 150px; height: auto;">
+                            <img src="img/blogs/<?php echo $entrada['imagen']; ?>" alt="imagen-entrada" ">
                         </a>
                     </div>
                 </div>

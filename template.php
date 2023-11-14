@@ -5,45 +5,6 @@ require 'clases/clienteFunciones.php';
 $db = new Database();
 $con = $db->conectar();
 
-
-$errors = [];
-
-if(!empty($_POST)){
-
-    $nombres = trim($_POST['nombres']);
-    $apellidos = trim($_POST['apellidos']);
-    $correo = trim($_POST['correo']);
-    $telefono = trim($_POST['telefono']);
-    $cedula = trim($_POST['cedula']);
-    $usuario = trim($_POST['usuario']);
-    $password = trim($_POST['password']);
-    $repassword = trim($_POST['repassword']); 
-
-    if(esNulo([$nombres, $apellidos, $correo, $telefono, $cedula, $usuario, $password, $repassword])){
-        $errors[]="Todos los campos son obligatorios";
-    }
-
-    if(!esCorreo($correo)){
-        $errors[] = "El correo no es valido.";
-    }
-
-    if(validaPassword($password, $repassword)){
-        $errors[] = "Las contraseñas no coinciden.";
-    }
-
-    if(usuarioExiste($usuario, $con)){
-        $errors[]= "Este usuario $usuario ya existe.";
-    }
-
-    if(correoExiste($correo, $con)){
-        $errors[]= "Este correo electrónico $correo ya existe.";
-    }
-
-    if(cedulaExiste($cedula, $con)){
-        $errors[]= "Esta cedula $cedula ya existe.";
-    }
-}
-
 ?>
 
 <!DOCTYPE html>
@@ -86,6 +47,13 @@ if(!empty($_POST)){
     </div>    
 </main>
 
+<main>
+<div class="container text-center">
+        <h2>¡Gracias por suscribirte!</h2>
+        <p class="fs-4">Tu suscripción ha sido confirmada. Recibirás nuestras actualizaciones pronto.</p>
+    </div>   
+    
+</main>
 
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>

@@ -4,12 +4,23 @@
 // Se requieren los archivos necesarios, incluyendo la configuración y la base de datos.
 require 'php/config.php'; 
 
-
 // Se crea una instancia de la clase Database para manejar la conexión a la base de datos.
 $db = new Database();
 $con = $db->conectar();
 
+// Verifica si se proporciona un ID válido en la URL
+if (isset($_GET['id']) && is_numeric($_GET['id'])) {
+    $blogId = $_GET['id'];
+
+    // Consulta SQL para obtener la información del blog específico
+    $stmt = $con->prepare("SELECT * FROM entradas_blog WHERE id = :id");
+    $stmt->bindParam(':id', $blogId);
+    $stmt->execute();
+    $entrada = $stmt->fetch(PDO::FETCH_ASSOC);
+
+   
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -30,7 +41,32 @@ $con = $db->conectar();
    
     <?php  include 'menu.php'; ?>  
         
-   
+<?php 
+
+if ($entrada) {
+    // Muestra los detalles del blog
+    echo "<main>";
+    echo "<div class='content'>";
+    echo "<h1>{$entrada['titulo']}</h1>";
+    echo "<div class='img-des'>";
+    echo "<img class='imgS' src='img/blogs/{$entrada['imagen']}' alt='{$entrada['titulo']}'>";
+    echo "<p class='img-des-txt'></p>";
+    echo "</div>";
+    echo "<p>{$entrada['contenido']}</p>";
+    echo "</div>";
+    echo "</main>";
+} else {
+    // Si no se encuentra la entrada, muestra un mensaje o redirige a otra página
+    echo "Entrada no encontrada";
+} 
+} else {
+// Si no se proporciona un ID válido, puedes mostrar un mensaje o redirigir a otra página
+echo "ID de blog no válido";
+}
+
+?>
+
+
    
 <?php include 'footer.php'; ?>
 

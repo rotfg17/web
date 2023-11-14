@@ -1,5 +1,4 @@
-<?php 
-
+<?php
 // Se requieren los archivos necesarios, incluyendo la configuración y la base de datos.
 require '../config/config.php'; 
 require '../config/database.php'; 
@@ -34,8 +33,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $ruta_imagen = $carpeta_destino . $imagen_nombre;
         move_uploaded_file($imagen_temp, $ruta_imagen);
     } else {
-        // Manejar el caso en el que no se seleccionó una imagen
-        $ruta_imagen = null; // O establece una ruta predeterminada si lo prefieres
+        // Si no se seleccionó una imagen, establecer una ruta predeterminada o nula
+        $ruta_imagen = '../../img/blogs/no-photo.jpg'; // Puedes establecer una ruta predeterminada
+        // O puedes establecerla a null si no deseas ninguna imagen por defecto
+        // $ruta_imagen = null;
     }
 
     // Guardar la entrada en la base de datos
@@ -49,6 +50,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     header("Location: index.php"); // Redireccionar al dashboard después de la publicación
 }
 ?>
+
 
 
 <?php include '../header.php'; ?>

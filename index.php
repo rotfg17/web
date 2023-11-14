@@ -308,35 +308,45 @@ $entradas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div> 
     </section>
 
-<section class="container blogs">
+    <section class="container blogs">
     <h1 class="heading-1">Últimos Blogs</h1>
 
     <div class="container-blogs">
-    <?php foreach ($entradas as $entrada) : ?>
-        <div class="card-blog">
-            <div class="container-imag">
-            <img src="img/blogs/<?php echo $entrada['imagen']; ?>" alt="imagen-entrada">  
-                <div class="button-group-blog">
-                    <span>
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                    </span>
-                    <span>
-                        <i class="fa-solid fa-link"></i>
-                    </span>
+        <?php
+        // Limitar a mostrar solo las tres primeras entradas
+        $numEntradasMostradas = 0;
+        foreach ($entradas as $entrada) :
+            if ($numEntradasMostradas < 3) :
+                ?>
+                <div class="card-blog">
+                    <div class="container-imag">
+                        <img src="img/blogs/<?php echo $entrada['imagen']; ?>" alt="imagen-entrada">
+                        <div class="button-group-blog">
+                            <span>
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </span>
+                            <span>
+                                <i class="fa-solid fa-link"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="content-blog">
+                        <h3><a href="detalle_blog.php?id=<?php echo $entrada['id']; ?>" class="text-reset text-monospace"><?php echo $entrada['titulo']; ?></a></h3>
+
+                        <p>
+                            <?php echo substr($entrada['contenido'], 0, 300); ?>
+                        </p>
+                        <div class="btn-read-more"><a href="detalle_blog.php?id=<?php echo $entrada['id']; ?>"> Leer más</a></div>
+                    </div>
                 </div>
-            </div>
-            <div class="content-blog">
-              <h3><a href="detalle_blog.php?id=<?php echo $entrada['id']; ?>"class="text-reset text-monospace"><?php echo $entrada['titulo']; ?></a></h3>
-                
-                <p>
-                <?php echo substr($entrada['contenido'], 0, 300);; ?>
-                </p>
-                <div class="btn-read-more"><a href="detalle_blog.php?id=<?php echo $entrada['id']; ?>"> Leer más</a></div>
-            </div>
-        </div>
-            <?php endforeach; ?>
-        </div>
+                <?php
+                $numEntradasMostradas++;
+            endif;
+        endforeach;
+        ?>
+    </div>
 </section>
+
 </main>
 
 <?php include 'footer.php'; ?>

@@ -37,13 +37,24 @@
             </div>
             <div class="newsletter">
                 <p class="title-footer">Boletín Informativo</p>
-                <div class="contenido">
+                <div class="contenido asa">
                     <p>
                         Suscribete a nuestros boletines ahora y mantente al
                         día con nuevas colecciones y ofertas exclusivas.
                     </p>
-                    <input type="email" placeholder="Ingresa el correo aquí...">
-                    <button>Suscríbete</button> 
+                    <form action="clases/procesar_suscripcion.php" method="post">
+                    <div class="alert alert-danger bg-transparent" role="alert">
+                    <?php
+                    // Mostrar mensaje de error si existe
+                    if (isset($_SESSION['error_message'])) {
+                        echo '<div class="error-message">' . $_SESSION['error_message'] . '</div>';
+                        unset($_SESSION['error_message']); 
+                    }
+                    ?>
+                    </div>
+                    <input type="email" id="correo" name="correo" placeholder="Ingresa el correo aquí..." required autocomplete="off">
+                    <button type="submit" valor="Suscríbete">Suscríbete</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -60,6 +71,5 @@
 <script>
     const base_url ="js/listadeseo.js";
 </script>
-     
 
 </footer>
