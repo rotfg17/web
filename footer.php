@@ -29,7 +29,7 @@
                 <p class="title-footer">Mi cuenta</p>
                 
                     <ul>
-                        <li><a href="#">Mi cuenta</a></li>
+                        <li><a href="cuenta.php">Mi cuenta</a></li>
                         <li><a href="compras.php">Mis pedidos</a></li>
                         <li><a href="wishlist.php">Lista de deseos</a></li>
                         

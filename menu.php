@@ -159,11 +159,11 @@
                                 <i class="fa-solid fa-circle-user"></i> <?php echo $_SESSION['user_name']; ?>
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="btn_session">
-                                <li><a class="dropdown-item" href="logout.php">Mi cuenta</a></li>
+                                <li><a class="dropdown-item" href="cuenta.php">Mi cuenta</a></li>
                                 <li><a class="dropdown-item" href="compras.php">Mis pedidos</a></li>
-                                <li><a class="dropdown-item" href="lista_deseo.php">Lista de deseos</a></li>
+                                <li><a class="dropdown-item" href="wishlist.php">Lista de deseos</a></li>
                                 <hr>
-                                <li><a class="dropdown-item" href="#">Configuración</a></li>
+                                <li><a class="dropdown-item" href="perfil.php">Configuración</a></li>
                                 <li><a class="dropdown-item" href="logout.php">Cerrar sesión</a></li>
 
                             </ul>

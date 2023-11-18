@@ -3619,6 +3619,11 @@
 }
 
 
+.hover:hover {
+    background-color: #ddd; /* Color gris al pasar el mouse */
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+}
 
 
 
