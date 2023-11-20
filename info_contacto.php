@@ -2,9 +2,16 @@
 require 'php/config.php';
 require 'clases/clienteFunciones.php';
 
-$db = new Database();
-$con = $db->conectar();
+// Verificar si la variable de sesión está establecida
+session_start();
+if (!isset($_SESSION['mensaje_enviado']) || !$_SESSION['mensaje_enviado']) {
+    // La variable de sesión no está establecida o es falsa, redirigir a otra página
+    header("Location: index.php");
+    exit;
+}
 
+// Limpiar la variable de sesión después de verificarla
+unset($_SESSION['mensaje_enviado']);
 ?>
 
 <!DOCTYPE html>
@@ -33,22 +40,14 @@ $con = $db->conectar();
 <body>
     
 <?php include 'menu.php'; ?> 
-  
+
 <main>
-    <div class="container br">
-    <?php
-    // Verifica si hay un mensaje en la URL
-    if (isset($_GET['mensaje'])) {
-        $mensaje = $_GET['mensaje'];
-        // Muestra un div con estilo de alerta
-        echo '<div class="alert">' . $mensaje . '</div>';
-    }
-    ?>
-    </div>    
+<div class="container text-center">
+        <h2>¡Mensaje Enviado!</h2>
+        <p class="fs-4">Gracias por ponerte en contacto con nosotros. Hemos recibido tu mensaje y te responderemos lo antes posible.</p>
+    </div>   
+    
 </main>
-
-<main>
-
 
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>

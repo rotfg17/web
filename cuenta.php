@@ -1,12 +1,8 @@
-<?php
-require 'php/config.php';
-require 'clases/clienteFunciones.php';
-
-$db = new Database();
-$con = $db->conectar();
+<?php 
+// Se requieren los archivos necesarios, incluyendo la configuración y la base de datos.
+require 'php/config.php'; 
 
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -50,25 +46,24 @@ $con = $db->conectar();
 
 <main>
     <div class="container">
-        <h1>Tu cuenta</h1>
-        <div class="row d-flex justify-content-center align-items-center">
+        <h1 class="text-center mb-5">Tu cuenta</h1>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
             <?php
-            $titulos = ['Tu perfil', 'Tus pedidos', 'Tu lista', 'Título 4', 'Título 5', 'Título 6'];
-            $descripciones = ['Gestionar tu información personal.', 'Descarga facturas y vuelve a comprar cuando lo desees.', 'Administra y descubre elementos en tu lista de deseos.', 'Descripción 4', 'Descripción 5', 'Descripción 6'];
-            $enlaces = ['perfil.php', 'compras.php', 'wishlist.php', 'pagina4.html', 'pagina5.html', 'pagina6.html'];
-            $imagenes = ['user.webp', 'checklist.webp', 'clipboard.webp', 'imagen4.webp', 'imagen5.webp', 'imagen6.webp'];
+            $titulos = ['Tu perfil', 'Tus pedidos', 'Tu lista', 'Servicio al Cliente', 'Título 5', 'Título 6'];
+            $descripciones = ['Gestionar tu información personal.', 'Descarga facturas y vuelve a comprar cuando lo desees.', 'Administra y descubre elementos en tu lista de deseos.', 'Si tienes alguna pregunta o comentario, no dudes en ponerte en contacto con nosotros.', 'Descripción 5', 'Descripción 6'];
+            $enlaces = ['perfil.php', 'compras.php', 'wishlist.php', 'info.php', 'pagina5.html', 'pagina6.html'];
+            $imagenes = ['user.webp', 'checklist.webp', 'clipboard.webp', 'info.webp', 'imagen5.webp', 'imagen6.webp'];
 
             for ($i = 0; $i < 6; $i++) {
-                echo '<div class="col-sm-4 mb-4">
+                echo '<div class="col mb-4">
                         <div class="card hover" onmouseover="cambiarColor(this)" onmouseout="restaurarColor(this)" onclick="redirigir(\'' . $enlaces[$i] . '\')">
                             <div class="card-body d-flex">
-                                <div class="col-sm-3 mb-3">
-                                <img src="img/' . $imagenes[$i] . '" alt="Imagen ' . ($i + 1) . '" class="img-fluid float-left" style="max-width: 100%; margin-right: 1rem;" />
-
+                                <div class="col-md-3 mb-3">
+                                    <img src="img/' . $imagenes[$i] . '" alt="Imagen ' . ($i + 1) . '" class="img-fluid float-left" style="max-width: 60%;" />
                                 </div>
-                                <div class="flex-column col-sm-9">
+                                <div class="flex-column ">
                                     <h3 class="card-title">' . $titulos[$i] . '</h3>
-                                    <div><span class="text-muted">' . $descripciones[$i] . '</span></div>
+                                    <div><span class="text-muted" style="font-size: 15px;">' . $descripciones[$i] . '</span></div>
                                 </div>
                             </div>
                         </div>
@@ -78,6 +73,7 @@ $con = $db->conectar();
         </div>
     </div>
 </main>
+
 
 <br><br><br><br>
 <br><br><br><br>

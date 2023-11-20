@@ -38,14 +38,14 @@ $con = $db->conectar();
             Nuestros canales de venta
         </h3>
         <div class="section_wrapp">
-            <a href="https://www.ferreseibo.com" target="_blank" class="section_wrapp_item">
+            <a href="https://www.ferreseibo.net" target="_blank" class="section_wrapp_item">
                 <i class="icons-web"></i>
                 <div class="section_wrapp_item_mv">
                     <p class="section_wrapp_item_title">
                         Compra por nuestra web
                     </p>
                     <p class="section_wrapp_item_text underline">
-                        www.ferreseibo.com
+                        www.ferreseibo.net
                     </p>
                 </div>
             </a>

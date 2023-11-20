@@ -1,8 +1,3 @@
-<?php
-
-
-?>
-
 <link rel="icon" type="image/png" sizes="128x128"  href="img/favicon.ico">
 <div class="sidebar">
     <div class="hdn-head">

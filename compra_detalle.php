@@ -1,10 +1,5 @@
 <?php
-// Inicio de la sección de código PHP.
-
-// Se incluye el archivo 'config.php' ubicado en la carpeta 'php'.
 require 'php/config.php';
-
-// Se incluye el archivo 'clienteFunciones.php' ubicado en la carpeta 'clases'.
 require 'clases/clienteFunciones.php';
 
 // Se recupera el valor de la variable 'token' almacenada en la sesión del usuario.
@@ -19,7 +14,7 @@ $token = $_GET['token'] ?? null;
 // Se realiza una serie de comprobaciones para verificar la validez de los parámetros 'orden' y 'token'.
 // Si no son válidos, se redirige al usuario a la página 'compras.php' y se finaliza la ejecución del script.
 if ($orden == null || $token == null || $token != $token_session) {
-    header("Location: compras.php");
+    header("Location: index.php");
     exit;
 }
 

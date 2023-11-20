@@ -242,3 +242,4 @@ function listaDeseo()
         $data = $this->model->getListaDeseo($producto['idProducto']);
     }
 }
+

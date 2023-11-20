@@ -2,8 +2,16 @@
 require 'php/config.php';
 require 'clases/clienteFunciones.php';
 
-$db = new Database();
-$con = $db->conectar();
+// Verificar si la variable de sesión está establecida
+session_start();
+if (!isset($_SESSION['mensaje_enviado']) || !$_SESSION['mensaje_enviado']) {
+    // La variable de sesión no está establecida o es falsa, redirigir a otra página
+    header("Location: index.php");
+    exit;
+}
+
+// Limpiar la variable de sesión después de verificarla
+unset($_SESSION['mensaje_enviado']);
 
 ?>
 

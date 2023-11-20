@@ -217,12 +217,12 @@ if (!empty($_POST)) {
 
                 <div class="col-md-6">
                         <label for="password"> <span class="text-danger">* </span> Contraseña</label>
-                        <input type="password" name="password" id="password" class="form-control" requireda>
-                </div>
+                        <input type="password"  name="password" id="password" class="form-control" requireda>
+                    </div>
 
                 <div class="col-md-6">
                         <label for="repassword"> <span class="text-danger">* </span> Repetir contraseña</label>
-                        <input type="password" name="repassword" id="repassword" class="form-control" requireda>
+                        <input type="password"  name="repassword" id="repassword" class="form-control" requireda>
                 </div>
 
                 <i class="nota"><b>Nota:</b> Los campos con asterisco son obligatorios</i>
@@ -234,7 +234,6 @@ if (!empty($_POST)) {
             </form>
     </div>    
 </main>
-
 
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>

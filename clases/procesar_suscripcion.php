@@ -5,6 +5,9 @@ require 'clienteFunciones.php';
 
 session_start();
 
+// Establecer una variable de sesión para indicar que se ha enviado el mensaje
+$_SESSION['mensaje_enviado'] = true;
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $correo = $_POST['correo'];
 
