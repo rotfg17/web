@@ -5,13 +5,15 @@ require 'clases/clienteFunciones.php';
 $db = new Database();
 $con = $db->conectar();
 
-$sql = "SELECT id, nombres, apellidos, correo, telefono, cedula, imagen FROM clientes WHERE activo = 1";
-$result = $con->query($sql);
-$perfil = $result->fetch(PDO::FETCH_ASSOC);
+$id = $_GET['id'];
 
-$sql = "SELECT id, usuario, password FROM usuarios WHERE activacion = 1";
-$consulta = $con->query($sql);
-$user = $consulta->fetch(PDO::FETCH_ASSOC);
+$sql =  $con->prepare("SELECT id, nombres, apellidos, correo, telefono, cedula FROM clientes WHERE id = ? LIMIT 1");
+$sql->execute([$id]);
+$perfil = $sql->fetch(PDO::FETCH_ASSOC);
+
+$sql =  $con->prepare("SELECT id, usuario FROM usuarios WHERE id = ? LIMIT 1");
+$sql->execute([$id]);
+$user = $sql->fetch(PDO::FETCH_ASSOC);
 
 ?>
 
@@ -56,40 +58,40 @@ $user = $consulta->fetch(PDO::FETCH_ASSOC);
 </main>
 
 <section class="container br">
-    <form class="row g-3" action="perfil.php" method="post">
+    <form class="row g-3" action="actualiza_perfil.php" method="post" autocomplete="off">
+    <input type="hidden" name="id" value="<?php echo $perfil['id']; ?>">
         <div class="col-md-6">
             <label for="nombres">Nombre</label>
-            <input type="text" name="nombres" id="nombres" class="form-control" value="<?php echo $perfil['nombres']; ?>" disabled>
+            <input type="text" name="nombres" id="nombres" class="form-control" value="<?php echo $perfil['nombres']; ?>" required>
         </div>
 
         <div class="col-md-6">
             <label for="apellidos">Apellidos</label>
-            <input type="text" name="apellidos" id="apellidos" class="form-control" value="<?php echo $perfil['apellidos']; ?>" disabled >
+            <input type="text" name="apellidos" id="apellidos" class="form-control" value="<?php echo $perfil['apellidos']; ?>" required>
         </div>
 
         <div class="col-md-6">
             <label for="correo">Correo electrónico</label>
-            <input type="email" name="correo" id="correo" class="form-control" value="<?php echo $perfil['correo']; ?>" disabled >
+            <input type="email" name="correo" id="correo" class="form-control" value="<?php echo $perfil['correo']; ?>" autocomplete="off" required>
         </div>
 
         <div class="col-md-6">
             <label for="telefono">Teléfono</label>
-            <input type="text" name="telefono" id="telefono" class="form-control" value="<?php echo $perfil['telefono']; ?>" disabled>
+            <input type="text" name="telefono" id="telefono" class="form-control" value="<?php echo $perfil['telefono']; ?>" autocomplete="off">
         </div>
 
         <div class="col-md-6">
             <label for="cedula">Cédula</label>
-            <input type="text" name="cedula" id="cedula" class="form-control" value="<?php echo $perfil['cedula']; ?>" disabled>
+            <input type="text" name="cedula" id="cedula" class="form-control" value="<?php echo $perfil['cedula']; ?>" autocomplete="off">
         </div>
 
         <div class="col-md-6">
             <label for="usuario">Usuario</label>
-            <input type="text" name="usuario" id="usuario" class="form-control" value="<?php echo $user['usuario']; ?>" disabled>
+            <input type="text" name="usuario" id="usuario" class="form-control" value="<?php echo $user['usuario']; ?>" autocomplete="off">
         </div>
 
         <div class="col-md-12">
-            <a class="btn btn-warning btn-sm" href="editar_perfil.php?id=<?php echo 
-                            $perfil['id']; ?>">Editar perfil</a>
+        <button type="submit" class="btn btn-primary">Guardar</button>
         </div>
     </form>
 </section>

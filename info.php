@@ -70,10 +70,10 @@ $con = $db->conectar();
 
 <form action="procesar_contacto.php" method="post" class="formulario">
         <label for="nombre">Nombre:</label>
-        <input type="text" id="nombre" name="nombre" class="campo" required>
+        <input type="text" id="nombre" name="nombre" class="campo" required autocomplete="off">
 
         <label for="email">Correo Electrónico:</label>
-        <input type="email" id="email" name="email"class="campo" required>
+        <input type="email" id="email" name="email"class="campo" required autocomplete="off">
 
         <label for="mensaje">Mensaje:</label>
         <textarea id="mensaje" name="mensaje" rows="4" class="campo" required></textarea>

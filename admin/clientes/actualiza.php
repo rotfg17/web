@@ -32,6 +32,7 @@ $cedula = $_POST['cedula'];
 $sql = $con->prepare("UPDATE clientes SET nombres = ?, apellidos = ?, correo = ?, telefono = ?, cedula = ? WHERE id = ?");
 $sql->execute([$nombres, $apellidos, $correo, $telefono, $cedula, $id]);
 
+
 // Redirige al usuario a la página de inicio después de completar la actualización
 header("Location: index.php");
 
