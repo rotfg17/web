@@ -45,7 +45,7 @@ $total_paginas = ceil($total_resultados / $resultados_por_pagina); // Calcula el
     <?php  include 'menu.php'; ?>
 
    <div class="banner-especial -1r">
-   <img class="img-responsive vdk" src="img/electricidad.png" alt="electricidad" width="100%" height="auto" >
+   <img class="img-responsive vdk" src="img/electricidad.webp" alt="electricidad" width="100%" height="auto" >
     </div>
 
     <section class="product02">

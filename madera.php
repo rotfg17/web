@@ -44,7 +44,7 @@ $total_paginas = ceil($total_resultados / $resultados_por_pagina); // Calcula el
 <?php include 'menu.php'; ?>
 
    <div class="banner-especial -1r">
-   <img class="img-responsive vdk" src="img/madera.png" alt="madera" width="100%" height="auto" ></a> 
+   <img class="img-responsive vdk" src="img/madera.webp" alt="madera" width="100%" height="auto" ></a> 
     </div>
 
    <section class="product02">

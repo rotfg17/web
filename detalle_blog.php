@@ -35,7 +35,7 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="css/css.css">
 
-        <title>Ferre Seibo - Agregados</title>
+        <title>Ferre Seibo - Detalles Blog</title>
     </head>
 <body>
    

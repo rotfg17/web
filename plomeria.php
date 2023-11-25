@@ -48,7 +48,7 @@ $total_paginas = ceil($total_resultados / $resultados_por_pagina);
 <?php include 'menu.php'; ?> 
 
    <div class="banner-especial -1r">
-   <img class="img-responsive vdk" src="img/plomeria.png" alt="Plomeria" width="100%" height="auto" >
+   <img class="img-responsive vdk" src="img/plomeria.webp" alt="Plomeria" width="100%" height="auto" >
     </div>
     <section class="product02"> 
     <div class="container-products" id="product-container">

@@ -118,7 +118,7 @@
 <header>
     <div class="first">
         <div class="flex logo">
-            <a href="index.php"><img src="img/Logo.png"></a>
+            <a href="index.php"><img src="img/Logo.webp"></a>
         </div>
         <div class=" flex flex-container">
         <form action="buscar.php" method="GET" class="my-form">

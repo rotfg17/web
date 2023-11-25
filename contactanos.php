@@ -27,7 +27,7 @@ $con = $db->conectar();
     <?php  include 'menu.php'; ?>
     
         <div class="banner-especial -1r">
-        <img class="img-responsive vdk" src="img/contactanos1.png" alt="Contactanos" width="100%" height="auto" >
+        <img class="img-responsive vdk" src="img/contactanos1.webp" alt="Contactanos" width="100%" height="auto" >
         <p class="banner-especial__txt">Puedes contactarnos a través de nuestros canales de venta y de atención.
             <br>
             Nuestros agentes te atenderán con gusto.</p>

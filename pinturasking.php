@@ -48,7 +48,7 @@ $total_paginas = ceil($total_resultados / $resultados_por_pagina);
 <?php include 'menu.php'; ?> 
 
    <div class="banner-especial -1r">
-   <a href="https://pinturasking.com.do/linea-proyecto/" target="_blank"><img class="img-responsive vdk" src="img/PINTURA.png" alt="Pintura" width="100%" height="auto" ></a> 
+   <a href="https://pinturasking.com.do/linea-proyecto/" target="_blank"><img class="img-responsive vdk" src="img/PINTURA.webp" alt="Pintura" width="100%" height="auto" ></a> 
     </div>
     <section class="product02"> 
     <div class="container-products" id="product-container">

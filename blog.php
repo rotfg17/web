@@ -68,7 +68,7 @@ $entradasPaginadas = $stmtPaginacion->fetchAll(PDO::FETCH_ASSOC);
     <?php  include 'menu.php'; ?>  
         
    <div class="banner-especial -1r">
-    <img class="img-responsive vdk" src="img/Enterate.png" alt="Contactanos" width="100%" height="auto" >
+    <img class="img-responsive vdk" src="img/Enterate.webp" alt="Blogs" width="100%" height="auto" >
     </div>
     <h1 class="title-color title-xs">BLOG</h1>
 
