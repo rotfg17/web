@@ -2,9 +2,11 @@
 // Inicio de la sección de código PHP.
 
 // Se incluye el archivo 'config.php' ubicado en la carpeta 'php'.
-require '../php/config.php';
+require '../config/database.php';
+require '../config/config.php';
 
-
+$db = new Database();
+$con = $db->conectar();
 
 // Obtener el término de búsqueda desde la URL
 $term = isset($_GET['search']) ? $_GET['search'] : '';
@@ -41,38 +43,60 @@ $productos = $sql->fetchAll(PDO::FETCH_ASSOC);
 </head>
 <body>
     
-<?php include 'header.php'; ?> 
+<?php include '../header.php';?>
+
+<main>
+    <div class="container-fluid px-4">
+        <h2 class="mt-3">Productos</h2>
+        <!-- Productos-->
+
+        <a href="nuevo.php" class="btn btn-primary">Agregar</a>
+        <a href="pro_eli.php" class="btn btn-primary">Eliminadas</a>
+            <br><br>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>                   
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Marca</th>
+                        <th scope="col">Descripcion</th>
+                        <th scope="col">Precio</th>
+                        <th scope="col">Descuento</th>
+                        <th scope="col">Stock</th>
+                        <th scope="col">Referencia</th>
+                        <th scope="col">Categoría</th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                  <?php foreach($productos as $producto) { ?>
+                        <tr>                      
+                            <td><?php echo htmlspecialchars($producto['nombre'], ENT_QUOTES); ?></td>
+                            <td><?php echo $producto['marca'] ?></td>
+                            <td><?php echo $producto['descripcion'] ?></td>
+                            <td><?php echo $producto['precio'] ?></td>
+                            <td><?php echo $producto['descuento'] ?></td>
+                            <td><?php echo $producto['stock'] ?></td>
+                            <td><?php echo $producto['num_referencia'] ?></td>
+                            <td><?php echo $producto['id_categoria'] ?></td>
+                            <td><a class="btn btn-warning btn-sm" href="edita.php?id=<?php echo 
+                            $producto['id']; ?>">Editar</a></td>
+                            <td>
+                            <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalElimina"
+                              data-bs-id=" <?php echo $producto['id'] ?>">
+                            <i class="fa-solid fa-xmark"></i>
+                            </button>
+                            </td>
+                        </tr>
+
+                    <?php } ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
  
-
-
-<section>
-<h2>Resultado de Búsqueda</h2>
-<div class="table-responsive">
-    <table class="table table-hover">
-        <thead>
-            <tr>
-                <!-- Encabezados de la tabla -->
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($productos as $producto) { ?>
-                <tr>
-                    <!-- Celdas de la tabla para mostrar los detalles del producto -->
-                    <td><?php echo htmlspecialchars($producto['nombre'], ENT_QUOTES); ?></td>
-                    <td><?php echo $producto['marca']; ?></td>
-                    <td><?php echo $producto['descripcion']; ?></td>
-                    <td><?php echo $producto['precio']; ?></td>
-                    <td><?php echo $producto['descuento']; ?></td>
-                    <td><?php echo $producto['stock']; ?></td>
-                    <td><?php echo $producto['num_referencia']; ?></td>
-                    <td><?php echo $producto['id_categoria']; ?></td>
-                    <!-- Puedes agregar más celdas según tus necesidades -->
-                </tr>
-            <?php } ?>
-        </tbody>
-    </table>
-</div>
-</section>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
 
