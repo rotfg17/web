@@ -1,6 +1,11 @@
 <?php 
-// Se requieren los archivos necesarios, incluyendo la configuración y la base de datos.
+
 require 'php/config.php'; 
+
+// Se requieren los archivos necesarios, incluyendo la configuración y la base de datos.
+if(!isset($_SESSION["user_id"] )){
+    header('Location: login.php');
+}
 
 ?>
 <!DOCTYPE html>

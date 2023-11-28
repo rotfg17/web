@@ -70,6 +70,12 @@ function addProducto(id, cantidad, token) {
         });
 }
 
+//codigo para hacer la compra del producto.
+function addandbuy(id, cantidad, token){
+    addProducto(id, cantidad, token);
+
+    window.location = "checkout.php";
+}
 
 async function addProductToWishList(id, token) {
     let url = 'clases/wishlist.php'; // URL del script para agregar productos a la lista de deseos

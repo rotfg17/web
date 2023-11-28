@@ -204,11 +204,10 @@ if ($id == '' || $token == '')  {
                     </div>
                 </div>
                 <!-- Botones para comprar y agregar al carrito con llamadas a funciones JavaScript -->
-                <button class="btn-cart" type="button">Comprar ahora</button>
+                <button class="btn-cart" type="button" onclick="addandbuy(<?php echo $id; ?>, cantidad.value, '<?php echo $token_tmp; ?>')">Comprar ahora</button>
                 <button class="btn-add-to-cart" type="button" onclick="addProducto(<?php echo $id; ?>, cantidad.value, '<?php echo $token_tmp; ?>')">Añadir al carrito</button>
             </div>
-            
-
+        
             <div class="container-description">
                 <div class="title-description">
                     <h4>Descripción</h4>

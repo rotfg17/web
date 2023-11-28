@@ -199,8 +199,7 @@ $entradas = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <button class="nxt-btn"><img src="img/arrow.png" alt=""></button>
         <div class="product-container" id="product-container">
         <?php foreach($resultado as $row) {?>
-        <div class="product-card">
-        
+        <div class="product-card-1">
             <div class="card-product">
                 <div class="container-img">
                 <?php 

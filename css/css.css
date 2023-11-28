@@ -1391,6 +1391,14 @@
       width: 250px;
       height: auto;
       margin-right: 4rem;
+      padding: 5%;
+  }
+
+  .product-card-1 {
+    flex: 0 0 auto;
+      width: 250px;
+      height: auto;
+      margin-right: 4rem;
   }
 
   .pre-btn,
