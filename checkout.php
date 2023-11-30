@@ -73,6 +73,15 @@ if ($productos != null) {
                             $subtotal = $cantidad * $precio_desc;
                             $total += $subtotal;
                             $imagen_producto = "img/productos/" . $_id . "/principal.jpg";
+
+                            if (!file_exists($imagen_producto)) {
+                                $imagen_producto = "img/productos/" . $_id . "/principal.png";
+                            } 
+
+                            if (!file_exists($imagen_producto)) {
+                                $imagen_producto = "img/productos/" . $_id . "/principal.webp";
+                            } 
+
                     ?>
                     <tr>
                         <td><img src="<?php echo $imagen_producto; ?>" width="70" height="70"></td>
