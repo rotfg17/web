@@ -115,9 +115,9 @@ if ($productos != null) {
         <div class="row">
              <div class="col-12 text-center">
                 <?php if(isset($_SESSION['user_cliente'])){?>
-                <a href="pago.php" class="btn btn-warning btn-lg btn-outline-warning xmark">Realizar pago</a>
+                <a href="direccion.php" class="btn btn-warning btn-lg btn-outline-warning xmark">Realizar pago</a>
                 <?php }else{ ?>
-                    <a href="login.php?pago" class="btn btn-warning btn-lg btn-outline-warning xmark">Realizar pago</a>
+                    <a href="login.php?direccion" class="btn btn-warning btn-lg btn-outline-warning xmark">Realizar pago</a>
                     <?php } ?>
              </div>           
         </div>
