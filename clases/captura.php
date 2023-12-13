@@ -1,8 +1,8 @@
 <?php
 
 // Incluye los archivos necesarios
-require_once '../php/config.php';
-require_once '../php/database.php';
+require '../php/config.php';
+
 
 // Crea una instancia de la base de datos
 $db = new Database();
@@ -55,8 +55,11 @@ if (is_array($datos)) {
                 $precio_desc = $precio - (($precio * $descuento) / 100);
 
                 // Inserta detalles de la compra en la base de datos
-                $sql_insert = $con->prepare("INSERT INTO detalle_compra (id_compra, id_producto, nombre, precio, cantidad) VALUE (?, ?, ?, ?, ?)");
-                $sql_insert->execute([$id, $clave, $row_prod['nombre'], $precio_desc, $cantidad]);
+                $sql_insert = $con->prepare("INSERT INTO detalle_compra (id_compra, id_producto, nombre, precio, cantidad)
+                VALUE (?, ?, ?, ?, ?)");
+                if($sql_insert->execute([$id, $clave, $row_prod['nombre'], $precio_desc, $cantidad])){
+                    restarStock($row_prod['id'], $cantidad, $con);
+                }
             }
 
             // Envía un correo electrónico con detalles de la compra
@@ -151,4 +154,9 @@ $cuerpo .= '</html>';
         // Limpia el carrito de la sesión
         unset($_SESSION['carrito']);
     }
+}
+
+function restarStock($id,$cantidad,$con){
+    $sql = $con->prepare("UPDATE productos SET stock = stock - ? WHERE id = ?");
+    $sql->execute([$cantidad, $id]);
 }

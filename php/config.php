@@ -12,13 +12,13 @@ $con = $db->conectar();
 // Consulta de configuración desde la base de datos
 $sql = "SELECT nombre, valor FROM configuracion";
 $resultado = $con->query($sql);
-$datos = $resultado->fetchAll(PDO::FETCH_ASSOC);
+$datosConfig = $resultado->fetchAll(PDO::FETCH_ASSOC);
 
 // Almacena la configuración en un arreglo asociativo
 $config = [];
 
-foreach ($datos as $dato) {
-    $config[$dato['nombre']] = $dato['valor'];
+foreach ($datosConfig as $datoConfig) {
+    $config[$datoConfig['nombre']] = $datoConfig['valor'];
 }
 
 // Configuración del sistema

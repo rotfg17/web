@@ -95,7 +95,8 @@ if ($productos != null) {
                             <div id="subtotal_<?php echo $_id; ?>" name="subtotal[]"><?php echo MONEDA . number_format($subtotal, 2, '.', ','); ?></div>
                         </td>
                         <td>
-                            <a id="eliminar" class="btn btn-warning btn-lg xmark" data-bs-id="<?php echo $_id; ?>" data-bs-toggle="modal" data-bs-target="#eliminaModal">
+                            <a id="eliminar" class="btn btn-warning btn-lg xmark" data-bs-id="<?php 
+                            echo $_id; ?>" data-bs-toggle="modal" data-bs-target="#eliminaModal">
                                 <button type="button" class="btn-close" aria-label="Close"></button>
                             </a>
                         </td>
@@ -154,40 +155,18 @@ if ($productos != null) {
 let eliminaModal = document.getElementById("eliminaModal")
 eliminaModal.addEventListener("show.bs.modal", function(event){
 	let button = event.relatedTarget
-	let id = button.getAttribute("data-bs-id")
-	let buttonElimina = eliminaModal.querySelector(".modal-footer #btn-elimina")
-	buttonElimina.value= id
+	let recipient = button.getAttribute("data-bs-id")
+	let botonElimina = eliminaModal.querySelector(".modal-footer #btn-elimina")
+	botonElimina.value = recipient
 })
-function eliminar(){
 
-let botonElimina = document.getElementById("btn-elimina")
-let id = botonElimina.value
+function actualizaCantidad(cantidad, id){ 
 
-
-let url = 'clases/actualizar_carrito.php'
-let formData = new FormData()
-formData.append('action', 'eliminar')
-formData.append('id', id)
-
-fetch(url, {
-    method:"POST",
-    body:formData,
-    mode: 'cors'
-}).then(response => response.json())
-.then(data => {
-    if(data.ok){
-        location.reload()
-       
-    }
-})
-}
-
-function actualizaCantidad(cantidad, id){
-    let url = 'clases/actualizar_carrito.php'
-    let formData = new FormData()
-    formData.append('action', 'agregar')
-	formData.append('id', id)
-    formData.append('cantidad', cantidad)
+    let url = 'clases/actualizar_carrito.php';
+    let formData = new FormData();
+    formData.append('action', 'agregar');
+	formData.append('id', id);
+    formData.append('cantidad', cantidad);
 
     fetch(url, {
         method:"POST",
@@ -212,9 +191,42 @@ function actualizaCantidad(cantidad, id){
                 
             }).format(total)
             document.getElementById('total').innerHTML = '<?php echo MONEDA; ?>' + total 
+        } else {
+            let inputCantidad = document.getElementById('cantidad_' + id) 
+                inputCantidad.value = data.cantidadAnterior
+            Swal.fire(
+                    'Aviso',
+                    'No hay suficientes productos en stock',
+                    'warning'
+                );
         }
     })
 }
+
+function eliminar(){
+let botonElimina = document.getElementById("btn-elimina")
+let recipient = botonElimina.value
+
+
+let url = 'clases/actualizar_carrito.php';
+let formData = new FormData();
+formData.append('action', 'eliminar');
+formData.append('id', recipient);
+
+fetch(url, {
+    method:"POST",
+    body:formData,
+    mode: 'cors'
+}).then(response => response.json())
+.then(data => {
+    if(data.ok){
+        location.reload()
+       
+    }
+})
+}
+
+
 </script>
 
  <!-- JavaScript para ocultar/mostrar el contenido -->

@@ -29,6 +29,7 @@ $sql = $con->prepare("SELECT id_transaccion, fecha, status, total, medio_pago FR
 // Se ejecuta la consulta SQL, pasando el valor de ':idCliente' como un parámetro.
 $sql->execute([':idCliente' => $idCliente]);
 
+
 // Fin de la sección de código PHP.
 ?>
 
@@ -67,6 +68,7 @@ $sql->execute([':idCliente' => $idCliente]);
         <div class="card-body">
             <h5 class="card-title">Orden #<?php echo $row['id_transaccion']; ?></h5>
             <p class="card-text">Total <?php echo $row['total']; ?></p>
+            
             
             <a href="compra_detalle.php?orden=<?php echo $row['id_transaccion']; ?>&token=<?php echo $token; ?>" class="btn btn-warning">Ver compra</a>
         </div>

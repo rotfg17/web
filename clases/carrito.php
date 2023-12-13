@@ -3,6 +3,8 @@
 // Incluye el archivo de configuración
 require '../php/config.php';
 
+$datos['ok'] = false;
+
 // Verifica si se ha enviado un ID por POST
 if(isset($_POST['id'])){
 
@@ -18,26 +20,25 @@ if(isset($_POST['id'])){
 
         // Verifica si el producto ya está en el carrito
         if(isset($_SESSION['carrito']['productos'][$id])){
-            // Si ya existe, aumenta la cantidad
-            $_SESSION['carrito']['productos'][$id] += $cantidad;
-        } else {
-            // Si no existe, agrega el producto al carrito con la cantidad especificada
-            $_SESSION['carrito']['productos'][$id] = $cantidad;
+            $cantidad += $_SESSION['carrito']['productos'][$id]; //2
         }
 
-        // Actualiza el número de productos en el carrito y establece el resultado como exitoso
-        $datos['numero'] = count($_SESSION['carrito']['productos']);
-        $datos['ok'] = true;
+            $db = new Database();
+            $con = $db->conectar();
+            $sql = $con->prepare("SELECT  stock FROM productos WHERE id=?  LIMIT 1");
+            $sql->execute([$id]);
+            $producto = $sql->fetch(PDO::FETCH_ASSOC);
+            $stock = $producto['stock'];
 
-    } else {
-        // Si los datos no son válidos, establece el resultado como no exitoso
-        $datos['ok'] =  false;
-    }
+            if($stock >= $cantidad){
+                $datos['ok'] = true;
+                $_SESSION['carrito']['productos'][$id] = $cantidad;
+                // Actualiza el número de productos en el carrito y establece el resultado como exitoso
+                $datos['numero'] = count($_SESSION['carrito']['productos']);
+            }
 
-} else {
-    // Si no se ha enviado un ID, establece el resultado como no exitoso
-    $datos['ok'] = false;
+     }
+
 }
-
 // Convierte los datos en un formato JSON y los envía de vuelta
 echo json_encode($datos);

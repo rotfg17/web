@@ -26,11 +26,13 @@ if ($productos != null) {
         $sql->execute([$clave]);
         $lista_carrito[] = $sql->fetch(PDO::FETCH_ASSOC);
     }
+    
 } else {
     // Si no hay productos en el carrito, se redirige al usuario a la página de inicio y se finaliza la ejecución del script.
     header("location: index.php");
     exit;
 }
+
 
 // Fin de la sección de código PHP.
 ?>
@@ -61,7 +63,7 @@ if ($productos != null) {
             <br><br>
 
             <form action="clases/guardar_direccion.php" method="post" class="row g-3" enctype="multipart/form-data" autocomplete="off">
-            <input type="hidden" name="id" value="<?php echo $idcliente['id_cliente']; ?>">
+            <input type="hidden" name="id_cliente" value="<?php echo $idcliente['id_cliente']; ?>">
                     <div class="col-md-6">
                         <label for="nombre" class="form-label">Nombre</label>
                         <input type="text" class="form-control" id="nombre" name="nombre">

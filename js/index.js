@@ -45,6 +45,7 @@ toggleReviews.addEventListener('click', () => {
 });
 
 // Agregar productos al carrito
+// Agregar productos al carrito
 function addProducto(id, cantidad, token) {
     let url = 'clases/carrito.php'; // URL del script para agregar productos al carrito
     let formData = new FormData();
@@ -60,15 +61,22 @@ function addProducto(id, cantidad, token) {
             if (data.ok) {
                 let elemento = document.getElementById("num_cart");
                 elemento.innerHTML = data.numero; // Actualiza el número de productos en el carrito
+                // Muestra un mensaje de aviso cuando se agrega el producto al carrito
+                Swal.fire(
+                    'Aviso',
+                    'Producto agregado al carrito correctamente',
+                    'success'
+                );
+            } else {
+                Swal.fire(
+                    'Aviso',
+                    'No hay suficientes productos en stock',
+                    'warning'
+                );
             }
-             // Muestra un mensaje de aviso cuando se agrega el producto a la lista de deseos
-    Swal.fire(
-        'Aviso',
-        'Producto agregado al carrito correctamente',
-        'success'
-    )
         });
 }
+
 
 //codigo para hacer la compra del producto.
 function addandbuy(id, cantidad, token){

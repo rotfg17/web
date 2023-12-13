@@ -12,17 +12,23 @@ $opcional = isset($_POST['opcional']) ? htmlspecialchars($_POST['opcional']) : '
 $sector = isset($_POST['sector']) ? htmlspecialchars($_POST['sector']) : '';
 
 // Obtén el id_cliente de la sesión o de donde lo obtienes
-// Esto es solo un ejemplo; asegúrate de obtenerlo de la manera correcta
-$id_cliente = isset($_POST['id_cliente']) ? intval($_POST['id_cliente']) : 0;
+$idcliente = isset($_POST['id']) ? intval($_POST['id']) : 0;
 
 try {
-    // Prepara una consulta SQL para insertar una nueva dirección en la base de datos
-    $sqlDireccion = $con->prepare("INSERT INTO direccion (calle, ciudad, opcional, sector, id_cliente, activo) VALUES (?, ?, ?, ?, ?, 1)");
-    $sqlDireccion->execute([$calle, $ciudad, $opcional, $sector, $id_cliente]);
+    // Verifica si la dirección ya existe para el id_cliente
+    $sqlVerificarDireccion = $con->prepare("SELECT id FROM direccion WHERE id_cliente = ? AND calle = ? AND ciudad = ? AND opcional = ? AND sector = ? AND activo = 1 LIMIT 1");
+    $sqlVerificarDireccion->execute([$idcliente, $calle, $ciudad, $opcional, $sector]);
+    $direccionExistente = $sqlVerificarDireccion->fetch(PDO::FETCH_ASSOC);
+
+    if (!$direccionExistente) {
+        // La dirección no existe, realiza la inserción
+        $sqlDireccion = $con->prepare("INSERT INTO direccion (calle, ciudad, opcional, sector, id_cliente, activo) VALUES (?, ?, ?, ?, ?, 1)");
+        $sqlDireccion->execute([$calle, $ciudad, $opcional, $sector, $idcliente]);
+    }
 
     // Obtén información del cliente
     $sqlCliente = $con->prepare("SELECT nombres, apellidos, telefono FROM clientes WHERE id = ? AND activo = 1");
-    $sqlCliente->execute([$id_cliente]);
+    $sqlCliente->execute([$idcliente]);
     $cliente = $sqlCliente->fetch(PDO::FETCH_ASSOC);
 
     // Redirige al usuario a la página de destino
@@ -33,4 +39,5 @@ try {
     // Manejo de errores: Imprime el mensaje de error
     echo "Error al insertar el registro o al obtener información del cliente: " . $e->getMessage();
 }
+
 ?>
