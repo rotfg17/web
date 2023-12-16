@@ -85,18 +85,24 @@ if ($productos != null) {
                 // Comienza la estructura HTML para mostrar la información del producto.
         ?>
                 <div class="card mb-4">
-                    <div class="card-body">
+                    <div class="card-body flex justify-content-between align-items-center">
+                        <div class="flex justify-content-start">
                         <a href="<?php echo $detalles_url; ?>">
                             <img src="<?php echo $imagen_producto; ?>" width="70" height="70">
                         </a>
+                        <div>
                         <h5 class="card-title">
                             <a href="<?php echo $detalles_url; ?>" class="text-reset"><?php echo $descripcion; // Esta información es para el texto ?></a>
                         </h5>
                         <div id="subtotal_<?php echo $_id; ?>" name="subtotal[]"><?php echo MONEDA . number_format($subtotal, 2, '.', ','); ?></div>
-                        <a id="eliminar" class="btn btn-warning btn-lg xmark" data-bs-id="<?php echo $_id; ?>" data-bs-toggle="modal" data-bs-target="#eliminaModal">
+                       </div>
+                    </div>
+                    <div class="flex flex-column" >
+                    <button class="btn btn-warning btn-lg xmark m-1 rounded-20" type="button" onclick="addProducto(<?php echo $_id; ?>, 1, '<?php echo hash_hmac('sha256', $_id, KEY_TOKEN); ?>')">Añadir al carrito</button>
+                        <a id="eliminar" class="btn btn-warning btn-lg xmark m-1 rounded" data-bs-id="<?php echo $_id; ?>" data-bs-toggle="modal" data-bs-target="#eliminaModal">
                             <button type="button" class="btn-close" aria-label="Close"></button>
                         </a>
-                        
+                    </div>
                     </div>
                 </div>
         <?php

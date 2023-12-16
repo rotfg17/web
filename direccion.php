@@ -63,19 +63,10 @@ if ($productos != null) {
             <br><br>
 
             <form action="clases/guardar_direccion.php" method="post" class="row g-3" enctype="multipart/form-data" autocomplete="off">
-            <input type="hidden" name="id_cliente" value="<?php echo $idcliente['id_cliente']; ?>">
-                    <div class="col-md-6">
-                        <label for="nombre" class="form-label">Nombre</label>
-                        <input type="text" class="form-control" id="nombre" name="nombre">
-                    </div>
-                    <div class="col-md-6">
-                        <label for="apellido" class="form-label">Apellido</label>
-                        <input type="text" class="form-control" id="apellido" name="apellido">
-                    </div>
-                    <div class="col-12">
-                        <label for="telefono" class="form-label">Número de teléfono</label>
-                        <input type="number" class="form-control" id="telefono" name="telefono" placeholder="(000)-000-0000">
-                    </div>
+            <?php echo" <input hidden name='id_cliente' value='".$_SESSION["user_id"]."' >";?>
+
+
+
                     <div class="col-12">
                         <label for="calle" class="form-label">Dirección</label>
                         <input type="text" class="form-control" id="calle" name="calle" placeholder="Nombre de la calle" required>

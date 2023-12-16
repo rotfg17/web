@@ -12,7 +12,8 @@ $opcional = isset($_POST['opcional']) ? htmlspecialchars($_POST['opcional']) : '
 $sector = isset($_POST['sector']) ? htmlspecialchars($_POST['sector']) : '';
 
 // Obtén el id_cliente de la sesión o de donde lo obtienes
-$idcliente = isset($_POST['id']) ? intval($_POST['id']) : 0;
+$idcliente = isset($_POST['id_cliente']) ? intval($_POST['id_cliente']) : 0;
+echo $idcliente;
 
 try {
     // Verifica si la dirección ya existe para el id_cliente
