@@ -12,7 +12,7 @@ $elementosPorPagina = 12;
 $paginaActual = isset($_GET['pagina']) ? $_GET['pagina'] : 1;
 
 // Crear la conexión a la base de datos
-$conexion = new mysqli("localhost", "root","", "ferreseibo_bd");
+$conexion = new mysqli("localhost", "root","Informatico1996!", "ferreseibo_bd");
 
 // Verificar la conexión
 if ($conexion->connect_error) {
