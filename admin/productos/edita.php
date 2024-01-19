@@ -4,17 +4,6 @@
 require '../config/database.php';
 require '../config/config.php';
 
-// Verifica si el usuario está autenticado. Si no lo está, redirige al usuario a la página de inicio.
-if (!isset($_SESSION['user_type'])){
-   header('Location: ../index.php');
-   exit;
-}
-
-// Verifica si el usuario es de tipo 'admin'. Si no lo es, redirige al usuario a la página de inicio general.
-if ($_SESSION['user_type'] != 'admin'){
-    header('Location: ../../index.php');
-    exit;
-}
 
 // Crea una instancia de la clase Database para establecer la conexión con la base de datos.
 $db = new Database();
